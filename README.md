@@ -1,8 +1,6 @@
 # Enterprise Commerce Platform
 
-This project is an enterprise-level e-commerce management system built with modern technologies and scalable architecture.
-
-NOTE: Project is under construction.
+This project is a comprehensive enterprise-level commerce management system built with modern technologies and scalable architecture.
 
 ## 🚀 Overview
 
@@ -10,9 +8,10 @@ This project implements a complete commerce platform with product portfolio mana
 
 ## 📋 Documentation
 
+- [**Project Status**](./docs/project-status.md) - **This project is under construction**. Review current implementation status and roadmap
+- [**CQRS Implementation**](./libs/access-service/CQRS-IMPLEMENTATION.md) - Complete CQRS documentation
 - [**Functional Objectives**](./docs/functional-objectives.md) - Detailed system requirements and business goals
 - [**System Architecture**](./docs/architecture.md) - Technical architecture and design patterns
-- [**API Documentation**](./docs/api/) - GraphQL schema and endpoint documentation
 - [**Development Guide**](./docs/development.md) - Setup and development instructions
 
 ## 🏗️ Architecture Overview
@@ -29,7 +28,7 @@ The system is organized in 4 distinct layers:
 - **Message Bus** - Event-driven communication with BullMQ
 
 ### 3. Services Layer
-- **Access Service** - Authentication, authorization, and user management
+- **Access Service** - 🔐 Authentication, authorization, and user management (✅ **CQRS COMPLETE**)
 - **Products Service** - Product catalog and inventory management
 - **Commerce Service** - Orders, pricing, promotions, and distribution
 - **Scheduling Service** - Calendar events and notifications
@@ -43,10 +42,11 @@ The system is organized in 4 distinct layers:
 ## 🛠️ Technology Stack
 
 - **Frontend**: Angular 20, PrimeNG, SCSS, Signals, Redux Pattern
-- **Backend**: NestJS, GraphQL, TypeORM
+- **Backend**: NestJS, GraphQL, TypeORM, **CQRS Pattern**
 - **Database**: MySQL
 - **Message Broker**: Redis + BullMQ
 - **Authentication**: Keycloak + RBAC
+- **Architecture**: **Hexagonal + DDD + Event Sourcing**
 - **Monitoring**: OpenTelemetry
 - **Documentation**: CompoDock
 - **Monorepo**: Nx Workspace
@@ -77,7 +77,8 @@ enterprise-commerce-platform/
 │   └── api-gateway/          # GraphQL Gateway
 ├── libs/
 │   ├── shared/               # Shared utilities and types
-│   ├── access-service/       # Authentication & Authorization
+│   ├── access-service/       # 🔐 Authentication & Authorization (✅ CQRS COMPLETE)
+│   │                        # └── 20+ Commands, 25+ Queries, Application Services
 │   ├── products-service/     # Product Management
 │   ├── commerce-service/     # Commerce Logic
 │   ├── scheduling-service/   # Calendar & Events

@@ -124,15 +124,18 @@ The Enterprise Commerce Platform follows a modern microservices architecture wit
 #### Service Communication Patterns
 - **GraphQL Federation**: Each service owns its schema portion
 - **Event-Driven**: Asynchronous communication via Redis events
-- **CQRS Implementation**: Separate command and query handlers
+- **CQRS Implementation**: Separate command and query handlers (✅ **IMPLEMENTED IN ACCESS SERVICE**)
 - **Saga Pattern**: Distributed transaction management
 
 #### Domain Models per Service
 
-**Access Service Domain**
+**Access Service Domain** (✅ **CQRS IMPLEMENTED**)
 - **Entities**: Person, User, Role, Permission, Group, Account, Preferences
 - **Aggregates**: UserAggregate, RoleAggregate, GroupAggregate
 - **Events**: UserCreated, RoleAssigned, PermissionGranted
+- **Commands**: 20+ implemented (CreateUser, UpdateUser, AssignRole, etc.)
+- **Queries**: 25+ implemented (GetUser, SearchUsers, CheckPermissions, etc.)
+- **Application Services**: UserApplicationService, RoleApplicationService, PermissionApplicationService
 
 **Products Service Domain**
 - **Entities**: Product, Family, Package, Stock, Variant
