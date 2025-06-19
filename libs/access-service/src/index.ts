@@ -7,6 +7,11 @@ export * from './application';
 // Export all domain layer
 export * from './domain';
 
+// Export infrastructure layer
+export * from './infrastructure/persistence/entities';
+export * from './infrastructure/persistence/repositories';
+export { AccessServicePersistenceModule } from './infrastructure/persistence/persistence.module';
+
 // Main Access Service entry point
 export const AccessService = {
   module: AccessServiceModule,

@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+// Import infrastructure layer
+import { AccessServicePersistenceModule } from './infrastructure/persistence/persistence.module';
+
 // Import all application layer components
 import { 
   AccessServiceApplicationHandlers,
@@ -53,22 +56,15 @@ import {
 @Module({
   imports: [
     CqrsModule,
-    // TypeOrmModule.forFeature([
-    //   // Entity definitions would go here
-    //   UserEntity,
-    //   RoleEntity,
-    //   PermissionEntity,
-    //   SessionEntity,
-    //   AuditLogEntity,
-    // ])
+    AccessServicePersistenceModule,
   ],
   providers: [
     // Application Layer
     ...AccessServiceApplicationHandlers,
     ...AccessServiceApplicationServices,
 
-    // Domain Layer Implementations (from Infrastructure)
-    // Note: These would be properly implemented in infrastructure layer
+    // Note: Repository implementations are now provided by AccessServicePersistenceModule
+    // The infrastructure layer handles all TypeORM mappings and implementations
     // {
     //   provide: UserRepository,
     //   useClass: TypeOrmUserRepository,
