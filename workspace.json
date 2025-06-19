@@ -1,0 +1,253 @@
+{
+  "version": 2,
+  "projects": {
+    "manager-app": {
+      "projectType": "application",
+      "root": "apps/manager-app",
+      "sourceRoot": "apps/manager-app/src",
+      "targets": {
+        "build": {
+          "executor": "@angular-devkit/build-angular:browser",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/manager-app",
+            "index": "apps/manager-app/src/index.html",
+            "main": "apps/manager-app/src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "apps/manager-app/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/manager-app/src/favicon.ico",
+              "apps/manager-app/src/assets"
+            ],
+            "styles": [
+              "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeicons/primeicons.css",
+              "apps/manager-app/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "serve": {
+          "executor": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "port": 4200
+          }
+        }
+      },
+      "tags": ["scope:manager", "type:app"]
+    },
+    "customer-app": {
+      "projectType": "application",
+      "root": "apps/customer-app",
+      "sourceRoot": "apps/customer-app/src",
+      "targets": {
+        "build": {
+          "executor": "@angular-devkit/build-angular:browser",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/customer-app",
+            "index": "apps/customer-app/src/index.html",
+            "main": "apps/customer-app/src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "apps/customer-app/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/customer-app/src/favicon.ico",
+              "apps/customer-app/src/assets"
+            ],
+            "styles": [
+              "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeicons/primeicons.css",
+              "apps/customer-app/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "serve": {
+          "executor": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "port": 4201
+          }
+        }
+      },
+      "tags": ["scope:customer", "type:app"]
+    },
+    "api-gateway": {
+      "projectType": "application",
+      "root": "apps/api-gateway",
+      "sourceRoot": "apps/api-gateway/src",
+      "targets": {
+        "build": {
+          "executor": "@nx/webpack:webpack",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "target": "node",
+            "compiler": "tsc",
+            "outputPath": "dist/apps/api-gateway",
+            "main": "apps/api-gateway/src/main.ts",
+            "tsConfig": "apps/api-gateway/tsconfig.app.json",
+            "assets": ["apps/api-gateway/src/assets"]
+          }
+        },
+        "serve": {
+          "executor": "@nx/js:node",
+          "options": {
+            "buildTarget": "api-gateway:build",
+            "port": 3000
+          }
+        }
+      },
+      "tags": ["scope:backend", "type:gateway"]
+    },
+    "access-service": {
+      "projectType": "application",
+      "root": "libs/access-service",
+      "sourceRoot": "libs/access-service/src",
+      "targets": {
+        "build": {
+          "executor": "@nx/webpack:webpack",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "target": "node",
+            "compiler": "tsc",
+            "outputPath": "dist/libs/access-service",
+            "main": "libs/access-service/src/main.ts",
+            "tsConfig": "libs/access-service/tsconfig.app.json"
+          }
+        },
+        "serve": {
+          "executor": "@nx/js:node",
+          "options": {
+            "buildTarget": "access-service:build",
+            "port": 3001
+          }
+        }
+      },
+      "tags": ["scope:backend", "type:service", "domain:access"]
+    },
+    "products-service": {
+      "projectType": "application",
+      "root": "libs/products-service",
+      "sourceRoot": "libs/products-service/src",
+      "targets": {
+        "build": {
+          "executor": "@nx/webpack:webpack",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "target": "node",
+            "compiler": "tsc",
+            "outputPath": "dist/libs/products-service",
+            "main": "libs/products-service/src/main.ts",
+            "tsConfig": "libs/products-service/tsconfig.app.json"
+          }
+        },
+        "serve": {
+          "executor": "@nx/js:node",
+          "options": {
+            "buildTarget": "products-service:build",
+            "port": 3002
+          }
+        }
+      },
+      "tags": ["scope:backend", "type:service", "domain:products"]
+    },
+    "commerce-service": {
+      "projectType": "application",
+      "root": "libs/commerce-service",
+      "sourceRoot": "libs/commerce-service/src",
+      "targets": {
+        "build": {
+          "executor": "@nx/webpack:webpack",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "target": "node",
+            "compiler": "tsc",
+            "outputPath": "dist/libs/commerce-service",
+            "main": "libs/commerce-service/src/main.ts",
+            "tsConfig": "libs/commerce-service/tsconfig.app.json"
+          }
+        },
+        "serve": {
+          "executor": "@nx/js:node",
+          "options": {
+            "buildTarget": "commerce-service:build",
+            "port": 3003
+          }
+        }
+      },
+      "tags": ["scope:backend", "type:service", "domain:commerce"]
+    },
+    "scheduling-service": {
+      "projectType": "application",
+      "root": "libs/scheduling-service",
+      "sourceRoot": "libs/scheduling-service/src",
+      "targets": {
+        "build": {
+          "executor": "@nx/webpack:webpack",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "target": "node",
+            "compiler": "tsc",
+            "outputPath": "dist/libs/scheduling-service",
+            "main": "libs/scheduling-service/src/main.ts",
+            "tsConfig": "libs/scheduling-service/tsconfig.app.json"
+          }
+        },
+        "serve": {
+          "executor": "@nx/js:node",
+          "options": {
+            "buildTarget": "scheduling-service:build",
+            "port": 3004
+          }
+        }
+      },
+      "tags": ["scope:backend", "type:service", "domain:scheduling"]
+    },
+    "business-service": {
+      "projectType": "application",
+      "root": "libs/business-service",
+      "sourceRoot": "libs/business-service/src",
+      "targets": {
+        "build": {
+          "executor": "@nx/webpack:webpack",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "target": "node",
+            "compiler": "tsc",
+            "outputPath": "dist/libs/business-service",
+            "main": "libs/business-service/src/main.ts",
+            "tsConfig": "libs/business-service/tsconfig.app.json"
+          }
+        },
+        "serve": {
+          "executor": "@nx/js:node",
+          "options": {
+            "buildTarget": "business-service:build",
+            "port": 3005
+          }
+        }
+      },
+      "tags": ["scope:backend", "type:service", "domain:business"]
+    },
+    "shared": {
+      "projectType": "library",
+      "root": "libs/shared",
+      "sourceRoot": "libs/shared/src",
+      "targets": {
+        "build": {
+          "executor": "@nx/js:tsc",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/shared",
+            "main": "libs/shared/src/index.ts",
+            "tsConfig": "libs/shared/tsconfig.lib.json"
+          }
+        }
+      },
+      "tags": ["scope:shared", "type:lib"]
+    }
+  }
+}

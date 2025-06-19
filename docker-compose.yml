@@ -1,0 +1,398 @@
+version: '3.8'
+
+services:
+  # Database Services
+  mysql:
+    image: mysql:8.0
+    container_name: enterprise-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: enterprise_commerce
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./infrastructure/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - enterprise_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Redis Services
+  redis:
+    image: redis:7-alpine
+    container_name: enterprise-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - enterprise_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # MinIO Object Storage
+  minio:
+    image: minio/minio:latest
+    container_name: enterprise-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - enterprise_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # Keycloak Authentication Server
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0.0
+    container_name: enterprise-keycloak
+    restart: unless-stopped
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
+      KC_DB: mysql
+      KC_DB_URL: jdbc:mysql://mysql:3306/keycloak
+      KC_DB_USERNAME: app_user
+      KC_DB_PASSWORD: app_password
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: start-dev
+    networks:
+      - enterprise_network
+
+  # Message Broker for BullMQ
+  redis-bullmq:
+    image: redis:7-alpine
+    container_name: enterprise-redis-bullmq
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_bullmq_data:/data
+    networks:
+      - enterprise_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # HAProxy Load Balancer
+  haproxy:
+    image: haproxy:2.8-alpine
+    container_name: enterprise-haproxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8404:8404"  # Stats page
+    volumes:
+      - ./infrastructure/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./infrastructure/haproxy/certs:/etc/ssl/certs:ro
+    depends_on:
+      - api-gateway
+      - manager-app
+      - customer-app
+    networks:
+      - enterprise_network
+
+  # Monitoring Stack
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: enterprise-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infrastructure/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - enterprise_network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: enterprise-grafana
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin123
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./infrastructure/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+    networks:
+      - enterprise_network
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: enterprise-jaeger
+    restart: unless-stopped
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+    environment:
+      COLLECTOR_OTLP_ENABLED: true
+    networks:
+      - enterprise_network
+
+  # Application Services
+  api-gateway:
+    build:
+      context: .
+      dockerfile: apps/api-gateway/Dockerfile
+    container_name: enterprise-api-gateway
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      REDIS_URL: redis://redis:6379
+      REDIS_BULLMQ_URL: redis://redis-bullmq:6379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: enterprise_commerce
+      MYSQL_USERNAME: app_user
+      MYSQL_PASSWORD: app_password
+      KEYCLOAK_URL: http://keycloak:8080
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      redis-bullmq:
+        condition: service_healthy
+    networks:
+      - enterprise_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  access-service:
+    build:
+      context: .
+      dockerfile: libs/access-service/Dockerfile
+    container_name: enterprise-access-service
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: production
+      PORT: 3002
+      REDIS_URL: redis://redis:6379
+      REDIS_BULLMQ_URL: redis://redis-bullmq:6379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: enterprise_commerce
+      MYSQL_USERNAME: app_user
+      MYSQL_PASSWORD: app_password
+      KEYCLOAK_URL: http://keycloak:8080
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis-bullmq:
+        condition: service_healthy
+    networks:
+      - enterprise_network
+
+  products-service:
+    build:
+      context: .
+      dockerfile: libs/products-service/Dockerfile
+    container_name: enterprise-products-service
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      NODE_ENV: production
+      PORT: 3003
+      REDIS_URL: redis://redis:6379
+      REDIS_BULLMQ_URL: redis://redis-bullmq:6379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: enterprise_commerce
+      MYSQL_USERNAME: app_user
+      MYSQL_PASSWORD: app_password
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis-bullmq:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - enterprise_network
+
+  commerce-service:
+    build:
+      context: .
+      dockerfile: libs/commerce-service/Dockerfile
+    container_name: enterprise-commerce-service
+    restart: unless-stopped
+    ports:
+      - "3004:3004"
+    environment:
+      NODE_ENV: production
+      PORT: 3004
+      REDIS_URL: redis://redis:6379
+      REDIS_BULLMQ_URL: redis://redis-bullmq:6379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: enterprise_commerce
+      MYSQL_USERNAME: app_user
+      MYSQL_PASSWORD: app_password
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis-bullmq:
+        condition: service_healthy
+    networks:
+      - enterprise_network
+
+  scheduling-service:
+    build:
+      context: .
+      dockerfile: libs/scheduling-service/Dockerfile
+    container_name: enterprise-scheduling-service
+    restart: unless-stopped
+    ports:
+      - "3005:3005"
+    environment:
+      NODE_ENV: production
+      PORT: 3005
+      REDIS_URL: redis://redis:6379
+      REDIS_BULLMQ_URL: redis://redis-bullmq:6379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: enterprise_commerce
+      MYSQL_USERNAME: app_user
+      MYSQL_PASSWORD: app_password
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis-bullmq:
+        condition: service_healthy
+    networks:
+      - enterprise_network
+
+  business-service:
+    build:
+      context: .
+      dockerfile: libs/business-service/Dockerfile
+    container_name: enterprise-business-service
+    restart: unless-stopped
+    ports:
+      - "3006:3006"
+    environment:
+      NODE_ENV: production
+      PORT: 3006
+      REDIS_URL: redis://redis:6379
+      REDIS_BULLMQ_URL: redis://redis-bullmq:6379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: enterprise_commerce
+      MYSQL_USERNAME: app_user
+      MYSQL_PASSWORD: app_password
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis-bullmq:
+        condition: service_healthy
+    networks:
+      - enterprise_network
+
+  # Frontend Applications
+  manager-app:
+    build:
+      context: .
+      dockerfile: apps/manager-app/Dockerfile
+    container_name: enterprise-manager-app
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    environment:
+      API_URL: http://api-gateway:3000/graphql
+      KEYCLOAK_URL: http://keycloak:8080
+    depends_on:
+      - api-gateway
+    networks:
+      - enterprise_network
+
+  customer-app:
+    build:
+      context: .
+      dockerfile: apps/customer-app/Dockerfile
+    container_name: enterprise-customer-app
+    restart: unless-stopped
+    ports:
+      - "4201:80"
+    environment:
+      API_URL: http://api-gateway:3000/graphql
+      KEYCLOAK_URL: http://keycloak:8080
+    depends_on:
+      - api-gateway
+    networks:
+      - enterprise_network
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  redis_bullmq_data:
+    driver: local
+  minio_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  enterprise_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

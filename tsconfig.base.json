@@ -1,0 +1,43 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "esnext",
+    "lib": ["ES2022", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@enterprise/shared": ["libs/shared/src/index.ts"],
+      "@enterprise/shared/*": ["libs/shared/src/lib/*"],
+      "@enterprise/access-service": ["libs/access-service/src/index.ts"],
+      "@enterprise/access-service/*": ["libs/access-service/src/lib/*"],
+      "@enterprise/products-service": ["libs/products-service/src/index.ts"],
+      "@enterprise/products-service/*": ["libs/products-service/src/lib/*"],
+      "@enterprise/commerce-service": ["libs/commerce-service/src/index.ts"],
+      "@enterprise/commerce-service/*": ["libs/commerce-service/src/lib/*"],
+      "@enterprise/scheduling-service": ["libs/scheduling-service/src/index.ts"],
+      "@enterprise/scheduling-service/*": ["libs/scheduling-service/src/lib/*"],
+      "@enterprise/business-service": ["libs/business-service/src/index.ts"],
+      "@enterprise/business-service/*": ["libs/business-service/src/lib/*"]
+    },
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "useDefineForClassFields": false
+  },
+  "exclude": ["node_modules", "tmp"]
+}
