@@ -41,7 +41,7 @@ The system is organized in 4 distinct layers:
 
 ## 🛠️ Technology Stack
 
-- **Frontend**: Angular 20, PrimeNG, SCSS, Signals, Redux Pattern
+- **Frontend**: Angular 19, PrimeNG, SCSS, Signals, Redux Pattern
 - **Backend**: NestJS, GraphQL, TypeORM, **CQRS Pattern**
 - **Database**: MySQL
 - **Message Broker**: Redis + BullMQ
@@ -49,7 +49,10 @@ The system is organized in 4 distinct layers:
 - **Architecture**: **Hexagonal + DDD + Event Sourcing**
 - **Monitoring**: OpenTelemetry
 - **Documentation**: CompoDock
-- **Monorepo**: Nx Workspace
+- **Monorepo**: Nx Workspace 20.5
+- **GraphQL**: Apollo Server v4 + Apollo Gateway v2.9
+- **Linting**: ESLint v9 + TypeScript ESLint v8
+- **Testing**: Jest 29.7 + Cypress
 
 ## 🔧 Quick Start
 

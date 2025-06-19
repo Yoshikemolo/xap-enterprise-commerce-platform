@@ -33,7 +33,7 @@ The Enterprise Commerce Platform follows a modern microservices architecture wit
 ┌─────────────────┬─────────────────┐
 │   Manager App   │  Customer App   │
 │                 │                 │
-│ Angular 20      │ Angular 20      │
+│ Angular 19      │ Angular 19      │
 │ PrimeNG         │ PrimeNG         │
 │ Signals         │ Signals         │
 │ Redux Pattern   │ Redux Pattern   │
@@ -42,7 +42,7 @@ The Enterprise Commerce Platform follows a modern microservices architecture wit
 ```
 
 **Technology Stack:**
-- **Framework**: Angular 20 with standalone components
+- **Framework**: Angular 19 with standalone components
 - **UI Library**: PrimeNG for enterprise-grade components
 - **State Management**: Redux pattern adapted for Angular Signals
 - **Styling**: SCSS with design system tokens

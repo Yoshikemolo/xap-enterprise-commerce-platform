@@ -172,7 +172,7 @@
 
 #### 3.2 Frontend Applications
 
-**Manager App Features:**
+**Frontend: Angular 19 Features:**
 - Dashboard with KPIs
 - Product management interface
 - Order processing system
