@@ -1,9 +1,28 @@
 {
   "name": "enterprise-commerce-platform",
   "version": "1.0.0",
-  "description": "A comprehensive enterprise-level commerce management system",
-  "author": "Enterprise Commerce Team",
+  "description": "A comprehensive enterprise-level commerce management system built with modern technologies and scalable architecture",
+  "author": {
+    "name": "Jorge Rodríguez Rengel",
+    "email": "jorge@ximplicity.com",
+    "url": "https://github.com/yoshikemolo"
+  },
+  "contributors": [
+    {
+      "name": "Jorge Rodríguez Rengel",
+      "email": "jorge@ximplicity.com",
+      "url": "https://github.com/yoshikemolo"
+    }
+  ],
   "license": "MIT",
+  "homepage": "https://github.com/ximplicity/enterprise-commerce-platform",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ximplicity/enterprise-commerce-platform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ximplicity/enterprise-commerce-platform/issues"
+  },
   "keywords": [
     "enterprise",
     "commerce",

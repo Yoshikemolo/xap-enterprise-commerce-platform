@@ -90,11 +90,24 @@ enterprise-commerce-platform/
 
 ## 🤝 Contributing
 
-Please read our [Contributing Guide](./docs/contributing.md) for details on our code of conduct and development process.
+We welcome contributions from the community! Please read our [Contributing Guide](./docs/contributing.md) for details on our code of conduct, development process, and how to submit pull requests.
+
+### Quick Contribution Steps
+
+1. **Fork the repository**
+2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
+3. **Make your changes** following our coding standards
+4. **Add tests** for new functionality
+5. **Commit your changes** (`git commit -m 'feat(scope): add amazing feature'`)
+6. **Push to the branch** (`git push origin feature/amazing-feature`)
+7. **Open a Pull Request**
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+**Copyright (c) 2025 Ximplicity Software Solutions, S.L.**  
+**Author: Jorge Rodríguez Rengel (AKA Yoshikemolo)**
 
 ---
 
