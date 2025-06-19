@@ -1,6 +1,8 @@
 # Enterprise Commerce Platform
 
-A comprehensive enterprise-level commerce management system built with modern technologies and scalable architecture.
+This project is an enterprise-level e-commerce management system built with modern technologies and scalable architecture.
+
+NOTE: Project is under construction.
 
 ## 🚀 Overview
 
