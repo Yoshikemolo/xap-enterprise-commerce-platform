@@ -8,8 +8,9 @@ This project implements a complete commerce platform with product portfolio mana
 
 ## 📋 Documentation
 
-- [**Project Status**](./docs/project-status.md) - **This project is under construction**. Review current implementation status and roadmap
-- [**CQRS Implementation**](./libs/access-service/CQRS-IMPLEMENTATION.md) - Complete CQRS documentation
+- [**Project Status**](./docs/project-status.md) - **Current implementation status** and development roadmap
+- [**Products Service Implementation**](./libs/products-service/PRODUCTS-SERVICE-IMPLEMENTATION.md) - **NEW**: Complete Products Service CQRS documentation
+- [**Access Service CQRS**](./libs/access-service/CQRS-IMPLEMENTATION.md) - Complete Access Service CQRS documentation
 - [**Functional Objectives**](./docs/functional-objectives.md) - Detailed system requirements and business goals
 - [**System Architecture**](./docs/architecture.md) - Technical architecture and design patterns
 - [**Development Guide**](./docs/development.md) - Setup and development instructions
@@ -28,11 +29,15 @@ The system is organized in 4 distinct layers:
 - **Message Bus** - Event-driven communication with BullMQ
 
 ### 3. Services Layer
-- **Access Service** - 🔐 Authentication, authorization, and user management (✅ **CQRS COMPLETE**)
-- **Products Service** - Product catalog and inventory management
-- **Commerce Service** - Orders, pricing, promotions, and distribution
-- **Scheduling Service** - Calendar events and notifications
-- **Business Logic Service** - Analytics, reporting, and business intelligence
+- **Access Service** - 🔐 Authentication, authorization, and user management (✅ **COMPLETE**)
+- **Products Service** - 🛍️ Product catalog and inventory management (🔄 **60% COMPLETE**)
+  - ✅ Domain Layer with batch traceability
+  - ✅ 25+ Commands implemented
+  - ✅ FIFO/FEFO logic for inventory rotation
+  - 🔄 Queries & Application Services (in progress)
+- **Commerce Service** - Orders, pricing, promotions, and distribution (📋 **PLANNED**)
+- **Scheduling Service** - Calendar events and notifications (📋 **PLANNED**)
+- **Business Logic Service** - Analytics, reporting, and business intelligence (📋 **PLANNED**)
 
 ### 4. Persistence Layer
 - **MySQL Database** - Primary data storage
@@ -60,6 +65,9 @@ The system is organized in 4 distinct layers:
 # Install dependencies
 npm install
 
+# Start infrastructure services
+docker-compose up -d mysql redis redis-bullmq minio keycloak
+
 # Start development environment
 npm run dev
 
@@ -80,16 +88,51 @@ enterprise-commerce-platform/
 │   └── api-gateway/          # GraphQL Gateway
 ├── libs/
 │   ├── shared/               # Shared utilities and types
-│   ├── access-service/       # 🔐 Authentication & Authorization (✅ CQRS COMPLETE)
-│   │                        # └── 20+ Commands, 25+ Queries, Application Services
-│   ├── products-service/     # Product Management
-│   ├── commerce-service/     # Commerce Logic
-│   ├── scheduling-service/   # Calendar & Events
-│   └── business-service/     # Analytics & Reporting
+│   ├── access-service/       # 🔐 Authentication & Authorization (✅ COMPLETE)
+│   │                        # └── 20+ Commands, 25+ Queries, Infrastructure Layer
+│   ├── products-service/     # 🛍️ Product Management (🔄 60% COMPLETE)
+│   │                        # ├── ✅ Domain Layer with batch management
+│   │                        # ├── ✅ 25+ Commands with FIFO/FEFO logic
+│   │                        # ├── 🔄 Queries & QueryHandlers (in progress)
+│   │                        # ├── 📋 Application Services (planned)
+│   │                        # └── 📋 Infrastructure Layer (planned)
+│   ├── commerce-service/     # Commerce Logic (📋 PLANNED)
+│   ├── scheduling-service/   # Calendar & Events (📋 PLANNED)
+│   └── business-service/     # Analytics & Reporting (📋 PLANNED)
 ├── tools/                    # Build and deployment tools
 ├── docs/                     # Documentation
 └── infrastructure/          # Docker, Kubernetes, etc.
 ```
+
+## 🎯 Current Development Status
+
+### ✅ **Completed Services**
+- **🔐 Access Service**: Complete CQRS implementation with security features
+- **🛍️ Products Service**: Domain Layer & Commands complete (60%)
+
+### 🔄 **In Progress**
+- **Products Service**: Queries, DTOs, Application Services, Infrastructure Layer
+
+### 📋 **Next Priority**
+- Complete Products Service implementation
+- Commerce Service development
+- Frontend applications development
+
+## 🚀 Key Features Implemented
+
+### Products Service Innovations
+- **📦 Batch Traceability**: Complete product → batch → order tracking
+- **🔄 FIFO/FEFO Logic**: Smart inventory rotation (First In/First Out, First Expired/First Out)
+- **🏷️ Product Codes**: Mandatory productCode for business identification
+- **📊 Batch Numbers**: Unique batch identifiers for complete traceability
+- **⚠️ Smart Alerts**: Low stock and expiration warnings
+- **📋 Stock Management**: Advanced reservations, releases, consumption tracking
+
+### Access Service Features
+- **🔐 RBAC**: Complete Role-Based Access Control
+- **👤 User Management**: Full CRUD with security analytics
+- **🔑 Permission System**: Granular permissions with conditions
+- **📊 Security Analytics**: Comprehensive reporting and monitoring
 
 ## 🤝 Contributing
 
@@ -105,6 +148,23 @@ We welcome contributions from the community! Please read our [Contributing Guide
 6. **Push to the branch** (`git push origin feature/amazing-feature`)
 7. **Open a Pull Request**
 
+## 📈 Development Roadmap
+
+### Phase 1: Core Services (Current)
+- ✅ Access Service (Complete)
+- 🔄 Products Service (60% complete)
+- 📋 Commerce Service (Next)
+
+### Phase 2: Integration & Frontend
+- 📋 API Gateway with GraphQL Federation
+- 📋 Manager App development
+- 📋 Customer App development
+
+### Phase 3: Advanced Features
+- 📋 Advanced analytics and reporting
+- 📋 Real-time notifications
+- 📋 Performance optimization
+
 ## 📄 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
@@ -115,3 +175,15 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ---
 
 **Built with ❤️ using modern enterprise technologies**
+
+## 🌟 Recent Updates
+
+### June 20, 2025 - Products Service Foundation Complete
+- ✅ **Domain Layer**: Product, Stock, Family, Package entities with advanced business logic
+- ✅ **Commands**: 25+ Commands with CommandHandlers for all operations
+- ✅ **Batch Management**: Complete traceability system with FIFO/FEFO logic
+- ✅ **Product Codes**: Mandatory productCode implementation
+- ✅ **Value Objects**: Robust validation and business rules
+- 🔄 **Next**: Queries, DTOs, Application Services implementation
+
+*View complete progress in [Project Status](./docs/project-status.md)*
