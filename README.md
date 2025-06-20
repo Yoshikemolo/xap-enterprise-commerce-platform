@@ -28,6 +28,10 @@ This project implements a complete commerce platform with product portfolio mana
 - [**System Architecture**](./docs/en/architecture.md) - Technical architecture and design patterns
 - [**Development Guide**](./docs/en/development.md) - Setup and development instructions
 - [**Contributing Guide**](./docs/en/contributing.md) - How to contribute to the project
+- [**Troubleshooting Guide**](./docs/en/troubleshooting.md) - **NEW**: Comprehensive problem-solving guide
+- [**FAQ**](./docs/en/faq.md) - **NEW**: Frequently asked questions and answers
+- [**Security Policy**](./SECURITY.md) - **NEW**: Security vulnerability reporting and best practices
+- [**Changelog**](./CHANGELOG.md) - **NEW**: Complete version history and release notes
 
 ### 🏗️ Architecture Overview
 
@@ -180,6 +184,10 @@ Este proyecto implementa una plataforma de comercio completa con gestión de por
 - [**Arquitectura del Sistema**](./docs/es/architecture.md) - Arquitectura técnica y patrones de diseño
 - [**Guía de Desarrollo**](./docs/es/development.md) - Instrucciones de configuración y desarrollo
 - [**Guía de Contribución**](./docs/es/contributing.md) - Cómo contribuir al proyecto
+- [**Guía de Resolución de Problemas**](./docs/es/troubleshooting.md) - **NUEVO**: Guía comprensiva para resolver problemas
+- [**FAQ**](./docs/es/faq.md) - **NUEVO**: Preguntas frecuentes y respuestas
+- [**Política de Seguridad**](./SECURITY-ES.md) - **NUEVO**: Reporte de vulnerabilidades y mejores prácticas
+- [**Changelog**](./CHANGELOG.md) - **NUEVO**: Historial completo de versiones y notas de lanzamiento
 
 ### 🏗️ Descripción de la Arquitectura
 

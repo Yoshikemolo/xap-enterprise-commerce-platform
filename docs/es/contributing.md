@@ -919,8 +919,10 @@ Los nuevos contribuidores pueden solicitar mentoría para:
 
 ### Recursos de Documentación
 
-- **Guía de Arquitectura**: `/docs/architecture.md`
-- **Guía de Desarrollo**: `/docs/development.md`
+- **Guía de Arquitectura**: [/docs/es/architecture.md](./architecture.md)
+- **Guía de Desarrollo**: [/docs/es/development.md](./development.md)
+- **Guía de Resolución de Problemas**: [/docs/es/troubleshooting.md](./troubleshooting.md)
+- **FAQ**: [/docs/es/faq.md](./faq.md)
 - **Documentación de API**: Generada desde anotaciones de código
 - **Tutoriales en Video**: Disponibles en el wiki del proyecto
 

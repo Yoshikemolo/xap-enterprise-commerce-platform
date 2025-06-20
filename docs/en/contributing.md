@@ -919,8 +919,10 @@ New contributors can request mentorship for:
 
 ### Documentation Resources
 
-- **Architecture Guide**: `/docs/architecture.md`
-- **Development Guide**: `/docs/development.md`
+- **Architecture Guide**: [/docs/en/architecture.md](./architecture.md)
+- **Development Guide**: [/docs/en/development.md](./development.md)
+- **Troubleshooting Guide**: [/docs/en/troubleshooting.md](./troubleshooting.md)
+- **FAQ**: [/docs/en/faq.md](./faq.md)
 - **API Documentation**: Generated from code annotations
 - **Video Tutorials**: Available in project wiki
 
