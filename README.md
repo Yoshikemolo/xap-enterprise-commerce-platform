@@ -21,6 +21,7 @@ This project implements a complete commerce platform with product portfolio mana
 
 ### 📋 Documentation
 
+- **[🚀 XAP Enterprise Commerce Platform](./docs/en/xap-marketing.md)** - **Marketing overview for SMBs and enterprises**
 - [**Project Status**](./docs/en/project-status.md) - **Current implementation status** and development roadmap
 - [**Products Service Implementation**](./libs/products-service/PRODUCTS-SERVICE-IMPLEMENTATION.md) - **NEW**: Complete Products Service CQRS documentation
 - [**Access Service CQRS**](./libs/access-service/CQRS-IMPLEMENTATION.md) - Complete Access Service CQRS documentation
@@ -177,6 +178,7 @@ Este proyecto implementa una plataforma de comercio completa con gestión de por
 
 ### 📋 Documentación
 
+- **[🚀 XAP Enterprise Commerce Platform](./docs/es/xap-marketing.md)** - **Visión comercial para PyMEs y empresas**
 - [**Estado del Proyecto**](./docs/es/project-status.md) - **Estado actual de implementación** y hoja de ruta de desarrollo
 - [**Implementación Products Service**](./libs/products-service/PRODUCTS-SERVICE-IMPLEMENTATION.md) - **NUEVO**: Documentación completa CQRS del Products Service
 - [**CQRS Access Service**](./libs/access-service/CQRS-IMPLEMENTATION.md) - Documentación completa CQRS del Access Service
