@@ -1,4 +1,4 @@
-# Enterprise Commerce Platform
+# XAP - Enterprise Commerce Platform
 
 <!-- Language Selector -->
 <div align="center">
