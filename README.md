@@ -49,11 +49,14 @@ The system is organized in 4 distinct layers:
 
 #### 3. Services Layer
 - **Access Service** - 🔐 Authentication, authorization, and user management (✅ **COMPLETE**)
-- **Products Service** - 🛍️ Product catalog and inventory management (🔄 **60% COMPLETE**)
+- **Products Service** - 🛍️ Product catalog and inventory management (🔄 **85% COMPLETE**)
   - ✅ Domain Layer with batch traceability
   - ✅ 25+ Commands implemented
+  - ✅ 25+ Queries with advanced search
+  - ✅ Complete DTOs with validation
+  - ✅ Application Services orchestration
   - ✅ FIFO/FEFO logic for inventory rotation
-  - 🔄 Queries & Application Services (in progress)
+  - 🔄 Infrastructure Layer (in progress)
 - **Commerce Service** - Orders, pricing, promotions, and distribution (📋 **PLANNED**)
 - **Scheduling Service** - Calendar events and notifications (📋 **PLANNED**)
 - **Business Logic Service** - Analytics, reporting, and business intelligence (📋 **PLANNED**)
@@ -206,11 +209,14 @@ El sistema está organizado en 4 capas distintas:
 
 #### 3. Capa de Servicios
 - **Access Service** - 🔐 Autenticación, autorización y gestión de usuarios (✅ **COMPLETO**)
-- **Products Service** - 🛍️ Catálogo de productos y gestión de inventario (🔄 **60% COMPLETO**)
+- **Products Service** - 🛍️ Catálogo de productos y gestión de inventario (🔄 **85% COMPLETO**)
   - ✅ Capa de Dominio con trazabilidad de lotes
   - ✅ 25+ Comandos implementados
+  - ✅ 25+ Queries con búsqueda avanzada
+  - ✅ DTOs completos con validación
+  - ✅ Orquestación de Application Services
   - ✅ Lógica FIFO/FEFO para rotación de inventario
-  - 🔄 Queries y Application Services (en progreso)
+  - 🔄 Capa de Infraestructura (en progreso)
 - **Commerce Service** - Órdenes, precios, promociones y distribución (📋 **PLANIFICADO**)
 - **Scheduling Service** - Eventos de calendario y notificaciones (📋 **PLANIFICADO**)
 - **Business Logic Service** - Analytics, reportes e inteligencia de negocio (📋 **PLANIFICADO**)
@@ -299,13 +305,13 @@ Este proyecto está licenciado bajo la **Licencia MIT** - consulta el archivo [L
 
 ### 🌟 Actualizaciones Recientes
 
-**20 de Junio, 2025 - Fundación del Products Service Completa**
-- ✅ **Capa de Dominio**: Entidades Product, Stock, Family, Package con lógica de negocio avanzada
-- ✅ **Comandos**: 25+ Comandos con CommandHandlers para todas las operaciones
-- ✅ **Gestión de Lotes**: Sistema de trazabilidad completo con lógica FIFO/FEFO
-- ✅ **Códigos de Producto**: Implementación de productCode obligatorio
-- ✅ **Value Objects**: Validación robusta y reglas de negocio
-- 🔄 **Siguiente**: Implementación de Queries, DTOs, Application Services
+**22 de Junio, 2025 - Products Service Application Layer Completa**
+- ✅ **Queries Completas**: 25+ Queries con QueryHandlers para operaciones avanzadas
+- ✅ **DTOs Completos**: Request/Response DTOs con validación class-validator
+- ✅ **Application Services**: ProductApplicationService, StockApplicationService, FamilyApplicationService, PackageApplicationService
+- ✅ **Business Orchestration**: Lógica de negocio completa con validaciones y reglas
+- ✅ **Advanced Queries**: Analytics, reportes, búsqueda avanzada y trazabilidad de lotes
+- 🔄 **Siguiente**: Implementación de Infrastructure Layer con TypeORM
 
 *Ver progreso completo en [Estado del Proyecto](./docs/es/project-status.md)*
 
