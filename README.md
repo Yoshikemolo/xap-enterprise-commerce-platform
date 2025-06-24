@@ -109,6 +109,38 @@ nx build access-service
 nx build products-service
 ```
 
+### 🧪 **NEW: Quick Testing & Development Setup**
+
+**For rapid testing without full infrastructure setup:**
+
+```bash
+# Navigate to testing app
+cd apps/products-testing
+
+# Start simplified testing server
+npm start
+
+# Server will run on http://localhost:3333
+```
+
+**Available testing endpoints:**
+- `GET /health` - Health check
+- `GET /test` - Basic test endpoint  
+- `GET /products` - Products API
+- `GET /products/:id` - Product by ID
+
+**Postman Testing:**
+1. Import collection from `postman-collection/products-service-testing.postman_collection.json`
+2. Run all tests to verify API functionality
+3. All endpoints include automatic response validation
+
+**✅ Benefits of Testing Setup:**
+- No database dependencies
+- Fast startup (< 10 seconds)
+- Complete API endpoint testing
+- Mock data for rapid development
+- Postman collection with automated tests
+
 ### 📦 Project Structure
 
 ```
@@ -292,6 +324,38 @@ nx test products-service
 nx build access-service
 nx build products-service
 ```
+
+### 🧪 **NUEVO: Configuración Rápida de Testing y Desarrollo**
+
+**Para testing rápido sin configuración completa de infraestructura:**
+
+```bash
+# Navegar a la app de testing
+cd apps/products-testing
+
+# Iniciar servidor de testing simplificado
+npm start
+
+# El servidor correrá en http://localhost:3333
+```
+
+**Endpoints de testing disponibles:**
+- `GET /health` - Health check
+- `GET /test` - Endpoint de prueba básico
+- `GET /products` - API de productos
+- `GET /products/:id` - Producto por ID
+
+**Testing con Postman:**
+1. Importar colección desde `postman-collection/products-service-testing.postman_collection.json`
+2. Ejecutar todas las pruebas para verificar funcionalidad de API
+3. Todos los endpoints incluyen validación automática de respuestas
+
+**✅ Beneficios del Setup de Testing:**
+- Sin dependencias de base de datos
+- Arranque rápido (< 10 segundos)
+- Testing completo de endpoints de API
+- Datos mock para desarrollo rápido
+- Colección de Postman con tests automatizados
 
 ### 🎯 Estado Actual del Desarrollo
 

@@ -20,6 +20,12 @@ import { ProductsServiceRepositories } from './infrastructure/persistence/reposi
 // Import Web Controllers
 import { ProductsServiceControllers } from './infrastructure/web';
 
+// Define DI Tokens for repositories
+export const PRODUCT_REPOSITORY = 'ProductRepository';
+export const STOCK_REPOSITORY = 'StockRepository';
+export const FAMILY_REPOSITORY = 'FamilyRepository';
+export const PACKAGE_REPOSITORY = 'PackageRepository';
+
 // Import Domain Repository Interfaces (for DI tokens)
 import { 
   ProductRepository, 
@@ -71,19 +77,19 @@ import {
     
     // Repository implementations with DI token mapping
     {
-      provide: ProductRepository,
+      provide: PRODUCT_REPOSITORY,
       useClass: TypeOrmProductRepository,
     },
     {
-      provide: StockRepository,
+      provide: STOCK_REPOSITORY,
       useClass: TypeOrmStockRepository,
     },
     {
-      provide: FamilyRepository,
+      provide: FAMILY_REPOSITORY,
       useClass: TypeOrmFamilyRepository,
     },
     {
-      provide: PackageRepository,
+      provide: PACKAGE_REPOSITORY,
       useClass: TypeOrmPackageRepository,
     },
   ],
@@ -92,10 +98,10 @@ import {
     ...ApplicationServices,
     
     // Export repositories for testing or other modules
-    ProductRepository,
-    StockRepository,
-    FamilyRepository,
-    PackageRepository,
+    PRODUCT_REPOSITORY,
+    STOCK_REPOSITORY,
+    FAMILY_REPOSITORY,
+    PACKAGE_REPOSITORY,
   ],
 })
 export class ProductsServiceModule {}

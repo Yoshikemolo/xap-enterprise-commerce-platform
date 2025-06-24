@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -19,30 +18,13 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Swagger configuration
-  const config = new DocumentBuilder()
-    .setTitle('Products Service Testing API')
-    .setDescription('API for testing Products Service functionality')
-    .setVersion('1.0')
-    .addTag('products', 'Product management operations')
-    .addTag('stock', 'Stock and inventory operations')
-    .addTag('families', 'Product family operations')
-    .addTag('packages', 'Package management operations')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document, {
-    swaggerOptions: {
-      persistAuthorization: true,
-    },
-  });
-
   // Health check endpoint
   app.getHttpAdapter().get('/health', (req, res) => {
     res.json({ 
       status: 'ok', 
       timestamp: new Date().toISOString(),
-      service: 'products-testing-app' 
+      service: 'products-testing-app',
+      message: 'Products Testing Service is running successfully!'
     });
   });
 
@@ -50,8 +32,12 @@ async function bootstrap() {
   await app.listen(port);
   
   console.log(`🚀 Products Testing Application is running on: http://localhost:${port}`);
-  console.log(`📚 API Documentation: http://localhost:${port}/api/docs`);
   console.log(`❤️ Health Check: http://localhost:${port}/health`);
+  console.log(`📦 Products API: http://localhost:${port}/products`);
+  console.log(`📊 Stock API: http://localhost:${port}/stock`);
 }
 
-bootstrap().catch(console.error);
+bootstrap().catch(error => {
+  console.error('❌ Error starting application:', error);
+  process.exit(1);
+});

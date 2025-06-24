@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "start": "node src/main.js",
+    "start:ts": "ts-node src/main.ts"
+  }
+}
