@@ -248,6 +248,33 @@
         }
       },
       "tags": ["scope:shared", "type:lib"]
+    },
+    "products-testing": {
+      "projectType": "application",
+      "root": "apps/products-testing",
+      "sourceRoot": "apps/products-testing/src",
+      "targets": {
+        "build": {
+          "executor": "@nx/webpack:webpack",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "target": "node",
+            "compiler": "tsc",
+            "outputPath": "dist/apps/products-testing",
+            "main": "apps/products-testing/src/main.ts",
+            "tsConfig": "apps/products-testing/tsconfig.app.json",
+            "assets": []
+          }
+        },
+        "serve": {
+          "executor": "@nx/js:node",
+          "options": {
+            "buildTarget": "products-testing:build",
+            "port": 3333
+          }
+        }
+      },
+      "tags": ["scope:backend", "type:testing", "domain:products"]
     }
   }
 }
