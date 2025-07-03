@@ -42,8 +42,8 @@ Se ha completado exitosamente la actualización de la colección de Postman para
 
 ### Colección Postman
 ```
-📁 C:/work/repo/ximplicity/xap-enterprise-commerce-platform/postman/
-├── Products_Service_Advanced_Testing_v1.3.0_COMPLETE.postman_collection.json
+📁 C:/work/repo/ximplicity/xap-enterprise-commerce-platform/postman-collection/
+├── products-service-advanced-testing.postman_collection.json
 └── README.md
 ```
 

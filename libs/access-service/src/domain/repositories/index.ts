@@ -458,5 +458,126 @@ export interface AuditLogFilter {
   ipAddress?: string;
 }
 
+// Group Repository Interface
+export interface GroupRepository extends Repository<Group> {
+  findByName(name: string): Promise<Group | null>;
+  findByParentId(parentId: string): Promise<Group[]>;
+  findRootGroups(): Promise<Group[]>;
+  findDescendants(groupId: string): Promise<Group[]>;
+  findAncestors(groupId: string): Promise<Group[]>;
+  findWithUsers(groupId: string): Promise<Group | null>;
+  findWithPermissions(groupId: string): Promise<Group | null>;
+  findUserGroups(userId: string): Promise<Group[]>;
+  findByPermissionName(permissionName: string): Promise<Group[]>;
+  findActiveGroups(): Promise<Group[]>;
+  findDefaultGroup(): Promise<Group>;
+  searchGroups(searchTerm: string): Promise<Group[]>;
+  countGroupUsers(groupId: string): Promise<number>;
+  countGroupPermissions(groupId: string): Promise<number>;
+  existsByName(name: string, excludeId?: string): Promise<boolean>;
+  validateGroupHierarchy(groupId: string, parentId: string): Promise<boolean>;
+}
+
+// Group Read Model Interface
+export interface GroupReadModel extends ReadModel<GroupDto> {
+  findGroupPermissions(groupId: string): Promise<string[]>;
+  findGroupUsers(groupId: string, options?: QueryOptions): Promise<UserDto[]>;
+  findGroupChildren(groupId: string): Promise<GroupDto[]>;
+  findGroupAncestors(groupId: string): Promise<GroupDto[]>;
+  searchGroups(searchTerm: string, options?: QueryOptions): Promise<GroupDto[]>;
+  getGroupHierarchy(): Promise<GroupHierarchyDto[]>;
+  getGroupTree(): Promise<GroupTreeDto[]>;
+}
+
+// Group DTOs
+export interface GroupDto {
+  id: string;
+  uuid: string;
+  name: string;
+  description: string;
+  isActive: boolean;
+  parentId?: string;
+  parent?: {
+    id: string;
+    name: string;
+    path: string;
+  };
+  children: {
+    id: string;
+    name: string;
+    isActive: boolean;
+  }[];
+  users: {
+    id: string;
+    email: string;
+    fullName: string;
+  }[];
+  permissions: PermissionDto[];
+  allPermissions: PermissionDto[];
+  path: string;
+  level: number;
+  isRootGroup: boolean;
+  hasChildren: boolean;
+  hasUsers: boolean;
+  hasPermissions: boolean;
+  isDefaultGroup: boolean;
+  userCount: number;
+  permissionCount: number;
+  childrenCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface GroupHierarchyDto {
+  id: string;
+  uuid: string;
+  name: string;
+  description: string;
+  isActive: boolean;
+  path: string;
+  level: number;
+  permissions: PermissionDto[];
+  children: GroupHierarchyDto[];
+  userCount: number;
+}
+
+export interface GroupTreeDto {
+  id: string;
+  name: string;
+  isActive: boolean;
+  children: GroupTreeDto[];
+  userCount: number;
+  permissionCount: number;
+}
+
+// Group Factory Interface
+export interface GroupFactory {
+  createGroup(data: CreateGroupData): Promise<Group>;
+  updateGroup(group: Group, data: UpdateGroupData): Promise<Group>;
+  validateGroupData(data: CreateGroupData | UpdateGroupData): Promise<void>;
+  createDefaultGroup(): Promise<Group>;
+  validateGroupHierarchy(groupId: string, parentId?: string): Promise<void>;
+}
+
+// Group Factory Data Types
+export interface CreateGroupData {
+  name: string;
+  description: string;
+  isActive?: boolean;
+  parentId?: string;
+  permissions?: string[];
+  users?: string[];
+}
+
+export interface UpdateGroupData {
+  name?: string;
+  description?: string;
+  isActive?: boolean;
+  parentId?: string;
+  permissions?: string[];
+  users?: string[];
+}
+
 // Export all interfaces
 export * from '../entities/user.entity';
+export * from './group.repository';

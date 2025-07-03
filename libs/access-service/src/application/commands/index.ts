@@ -559,6 +559,10 @@ export class UpdatePermissionCommandHandler implements ICommandHandler<UpdatePer
   }
 }
 
+// Import Group Commands and Handlers
+export * from './group.commands';
+import { GroupCommandHandlers } from './group.commands';
+
 // Export all command handlers
 export const CommandHandlers = [
   CreateUserCommandHandler,
@@ -572,4 +576,5 @@ export const CommandHandlers = [
   UpdateRoleCommandHandler,
   CreatePermissionCommandHandler,
   UpdatePermissionCommandHandler,
+  ...GroupCommandHandlers, // Include all Group command handlers
 ];

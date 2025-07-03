@@ -10,6 +10,14 @@ import {
   UserLoggedOutEvent
 } from '@enterprise/shared';
 
+// Forward declaration to avoid circular dependency
+interface Group {
+  id: string;
+  name: string;
+  getAllPermissionsIncludingInherited(): Permission[];
+  toPlainObject(): any;
+}
+
 export interface UserProps {
   id?: string;
   uuid?: string;
@@ -25,6 +33,7 @@ export interface UserProps {
   preferences?: UserPreferences;
   roles: Role[];
   permissions: Permission[];
+  groups?: Group[];
 }
 
 export interface UserPreferences {
@@ -51,6 +60,7 @@ export class User extends AggregateRootImpl {
   private _preferences: UserPreferences;
   private _roles: Role[] = [];
   private _permissions: Permission[] = [];
+  private _groups: Group[] = [];
 
   constructor(props: UserProps) {
     super(props.id, props.uuid);
@@ -67,6 +77,7 @@ export class User extends AggregateRootImpl {
     this._preferences = props.preferences || this.getDefaultPreferences();
     this._roles = props.roles || [];
     this._permissions = props.permissions || [];
+    this._groups = props.groups || [];
   }
 
   static create(props: Omit<UserProps, 'id' | 'uuid' | 'loginAttempts' | 'isEmailVerified'>): User {
@@ -138,9 +149,10 @@ export class User extends AggregateRootImpl {
   }
 
   get permissions(): Permission[] {
-    // Get permissions from roles plus direct permissions
+    // Get permissions from roles, direct permissions, and groups
     const rolePermissions = this._roles.flatMap(role => role.permissions);
-    const allPermissions = [...rolePermissions, ...this._permissions];
+    const groupPermissions = this._groups.flatMap(group => group.getAllPermissionsIncludingInherited());
+    const allPermissions = [...rolePermissions, ...this._permissions, ...groupPermissions];
     
     // Remove duplicates based on permission name
     const uniquePermissions = allPermissions.filter(
@@ -149,6 +161,10 @@ export class User extends AggregateRootImpl {
     );
     
     return uniquePermissions;
+  }
+
+  get groups(): Group[] {
+    return [...this._groups];
   }
 
   get isLocked(): boolean {
@@ -336,6 +352,43 @@ export class User extends AggregateRootImpl {
     return this.permissions.some(permission => permission.name === permissionName);
   }
 
+  assignGroup(group: Group): void {
+    if (this.hasGroup(group.id)) {
+      return; // Already has this group
+    }
+
+    this._groups.push(group);
+    this.updateTimestamp();
+
+    this.addEvent(new UserUpdatedEvent(this.id, {
+      updatedFields: ['groups'],
+    }));
+  }
+
+  removeGroup(groupId: string): void {
+    const initialLength = this._groups.length;
+    this._groups = this._groups.filter(group => group.id !== groupId);
+
+    if (this._groups.length !== initialLength) {
+      this.updateTimestamp();
+      this.addEvent(new UserUpdatedEvent(this.id, {
+        updatedFields: ['groups'],
+      }));
+    }
+  }
+
+  hasGroup(groupId: string): boolean {
+    return this._groups.some(group => group.id === groupId);
+  }
+
+  hasGroupByName(groupName: string): boolean {
+    return this._groups.some(group => group.name === groupName);
+  }
+
+  belongsToDefaultGroup(): boolean {
+    return this.hasGroupByName('DefaultGroup');
+  }
+
   canPerformAction(resource: string, action: string): boolean {
     return this.permissions.some(permission => 
       permission.resource === resource && permission.action === action
@@ -405,6 +458,7 @@ export class User extends AggregateRootImpl {
       preferences: this._preferences,
       roles: this._roles.map(role => role.toPlainObject()),
       permissions: this.permissions.map(permission => permission.toPlainObject()),
+      groups: this._groups.map(group => group.toPlainObject()),
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       version: this.version,

@@ -86,7 +86,7 @@ enterprise-commerce-platform/
 │   │   │   │   └── decorators/  # Custom decorators
 │   │   │   └── index.ts
 │   │   └── project.json
-│   ├── access-service/           # Authentication & Authorization
+│   ├── access-service/           # Authentication & Authorization + Group Management
 │   │   ├── src/
 │   │   │   ├── app/             # NestJS modules
 │   │   │   ├── domain/          # Domain models and logic
@@ -272,6 +272,130 @@ export class UserCreatedEventHandler implements IEventHandler<UserCreatedEvent> 
     
     // Mark as processed
     await this.inboxRepository.markProcessed(event.id);
+  }
+}
+```
+
+### 3. Group Management Implementation
+
+```typescript
+// Group Entity with Hierarchical Support
+@Entity('groups')
+export class GroupEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ unique: true })
+  name: string;
+
+  @Column()
+  description: string;
+
+  @Column({ name: 'parent_id', nullable: true })
+  parentId?: string;
+
+  @Column({ name: 'is_active', default: true })
+  isActive: boolean;
+
+  @Column({ name: 'is_default', default: false })
+  isDefault: boolean;
+
+  // Self-referencing relationships for hierarchy
+  @ManyToOne(() => GroupEntity, { nullable: true })
+  @JoinColumn({ name: 'parent_id' })
+  parent?: GroupEntity;
+
+  @OneToMany(() => GroupEntity, group => group.parent)
+  children: GroupEntity[];
+
+  // Many-to-many with users
+  @ManyToMany(() => UserEntity, user => user.groups)
+  users: UserEntity[];
+
+  // Many-to-many with permissions
+  @ManyToMany(() => PermissionEntity)
+  @JoinTable({ name: 'group_permissions' })
+  permissions: PermissionEntity[];
+}
+
+// Group Command Handler Example
+@CommandHandler(CreateGroupCommand)
+export class CreateGroupCommandHandler implements ICommandHandler<CreateGroupCommand> {
+  constructor(
+    private readonly groupRepository: GroupRepository,
+    private readonly eventBus: EventBus,
+  ) {}
+
+  async execute(command: CreateGroupCommand): Promise<string> {
+    // Validate hierarchy if parent specified
+    if (command.parentId) {
+      const parentGroup = await this.groupRepository.findById(command.parentId);
+      if (!parentGroup) {
+        throw new DomainError('Parent group not found');
+      }
+    }
+
+    const group = Group.create(
+      command.name,
+      command.description,
+      command.parentId,
+      command.isActive
+    );
+
+    // Check for circular references
+    await this.validateGroupHierarchy(group);
+
+    await this.groupRepository.save(group);
+    
+    // Publish domain event
+    await this.eventBus.publish(new GroupCreatedEvent(group.id, group.name));
+    
+    return group.id;
+  }
+
+  private async validateGroupHierarchy(group: Group): Promise<void> {
+    // Implementation to prevent circular references
+    // and validate hierarchy constraints
+  }
+}
+
+// Group Query Handler for Hierarchy
+@QueryHandler(GetGroupHierarchyQuery)
+export class GetGroupHierarchyQueryHandler implements IQueryHandler<GetGroupHierarchyQuery> {
+  constructor(private readonly groupReadModel: GroupReadModel) {}
+
+  async execute(query: GetGroupHierarchyQuery): Promise<GroupHierarchyDto> {
+    return this.groupReadModel.getHierarchy(query.rootGroupId, query.maxDepth);
+  }
+}
+
+// Bulk User Assignment Handler
+@CommandHandler(BulkAssignUsersToGroupCommand)
+export class BulkAssignUsersToGroupCommandHandler implements ICommandHandler<BulkAssignUsersToGroupCommand> {
+  constructor(
+    private readonly groupRepository: GroupRepository,
+    private readonly userRepository: UserRepository,
+    private readonly eventBus: EventBus,
+  ) {}
+
+  async execute(command: BulkAssignUsersToGroupCommand): Promise<void> {
+    const group = await this.groupRepository.findById(command.groupId);
+    const users = await this.userRepository.findByIds(command.userIds);
+
+    // Validate all users exist
+    if (users.length !== command.userIds.length) {
+      throw new DomainError('Some users not found');
+    }
+
+    // Add users to group
+    group.addUsers(command.userIds);
+    
+    await this.groupRepository.save(group);
+    
+    // Publish bulk assignment event
+    await this.eventBus.publish(
+      new BulkUsersAssignedToGroupEvent(command.groupId, command.userIds)
+    );
   }
 }
 ```
@@ -667,6 +791,9 @@ docker-compose logs -f api-gateway
 3. **Redis connection**: Verify Redis services are healthy
 4. **Build errors**: Clear node_modules and reinstall dependencies
 5. **TypeScript errors**: Check path mappings in tsconfig.base.json
+6. **Group hierarchy errors**: Check for circular references in group relationships
+7. **Bulk operations timeout**: Verify batch sizes for user/permission assignments
+8. **DefaultGroup issues**: DefaultGroup cannot be deleted or have parent group
 
 ### Getting Help
 
