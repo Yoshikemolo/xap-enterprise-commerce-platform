@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, Index, VersionColumn } from 'typeorm';
 import { RoleEntity } from './role.entity';
 import { PermissionEntity } from './permission.entity';
+import { GroupEntity } from './group.entity';
 
 @Entity('users')
 @Index(['email'], { unique: true })
@@ -66,6 +67,9 @@ export class UserEntity {
   })
   directPermissions: PermissionEntity[];
 
+  @ManyToMany(() => GroupEntity, group => group.users, { cascade: false })
+  groups: GroupEntity[];
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -84,18 +88,34 @@ export class UserEntity {
     return this.lockedUntil ? this.lockedUntil > new Date() : false;
   }
 
-  // Helper method to get all permissions (from roles + direct)
+  // Helper method to get all permissions (from roles + direct + groups)
   getAllPermissions(): PermissionEntity[] {
     const rolePermissions = this.roles?.flatMap(role => role.permissions || []) || [];
     const directPermissions = this.directPermissions || [];
+    const groupPermissions = this.groups?.flatMap(group => group.getAllPermissionsIncludingInherited() || []) || [];
     
     // Remove duplicates based on permission name
-    const allPermissions = [...rolePermissions, ...directPermissions];
+    const allPermissions = [...rolePermissions, ...directPermissions, ...groupPermissions];
     const uniquePermissions = allPermissions.filter(
       (permission, index, self) => 
         index === self.findIndex(p => p.name === permission.name)
     );
     
     return uniquePermissions;
+  }
+
+  // Get all groups the user belongs to
+  getUserGroups(): GroupEntity[] {
+    return this.groups || [];
+  }
+
+  // Check if user belongs to a specific group
+  belongsToGroup(groupName: string): boolean {
+    return this.groups?.some(group => group.name === groupName) || false;
+  }
+
+  // Check if user belongs to DefaultGroup
+  belongsToDefaultGroup(): boolean {
+    return this.belongsToGroup('DefaultGroup');
   }
 }

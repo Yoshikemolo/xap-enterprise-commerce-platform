@@ -1,8 +1,8 @@
-# Access Service - CQRS Implementation Complete
+# Access Service - CQRS Implementation Complete + GROUP ENTITY
 
 ## 📋 Resumen de Implementación
 
-La implementación CQRS (Command Query Responsibility Segregation) del Access Service ha sido completada exitosamente, siguiendo los principios de arquitectura hexagonal y Domain-Driven Design.
+La implementación CQRS (Command Query Responsibility Segregation) del Access Service ha sido completada exitosamente, incluyendo la **nueva entidad Group** con capacidades jerárquicas avanzadas, siguiendo los principios de arquitectura hexagonal y Domain-Driven Design.
 
 ## 🏗️ Arquitectura Implementada
 
@@ -21,10 +21,10 @@ La implementación CQRS (Command Query Responsibility Segregation) del Access Se
 - **Services** (`services/`): Servicios de aplicación que orquestan Commands y Queries
 
 #### 2. Domain Layer (`src/domain/`)
-- **Entities** (`entities/`): User, Role, Permission
-- **Repositories** (`repositories/`): Interfaces para acceso a datos
+- **Entities** (`entities/`): User, Role, Permission, **Group** (nuevo)
+- **Repositories** (`repositories/`): Interfaces para acceso a datos incluyendo GroupRepository
 - **Value Objects**: Email, UserPreferences
-- **Domain Events**: UserCreated, UserUpdated, etc.
+- **Domain Events**: UserCreated, UserUpdated, GroupCreated, GroupUpdated, etc.
 
 ## 📊 Commands Implementados
 

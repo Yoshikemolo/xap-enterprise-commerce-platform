@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, Index, VersionColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { RoleEntity } from './role.entity';
+import { GroupEntity } from './group.entity';
 
 @Entity('permissions')
 @Index(['name'], { unique: true })
@@ -30,6 +31,9 @@ export class PermissionEntity {
   @ManyToMany(() => RoleEntity, role => role.permissions)
   roles: RoleEntity[];
 
+  @ManyToMany(() => GroupEntity, group => group.permissions)
+  groups: GroupEntity[];
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -54,6 +58,10 @@ export class PermissionEntity {
 
   getRoleCount(): number {
     return this.roles?.length || 0;
+  }
+
+  getGroupCount(): number {
+    return this.groups?.length || 0;
   }
 
   // Format for display

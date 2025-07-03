@@ -21,6 +21,7 @@ export * from './role.queries';
 export * from './permission.queries';
 export * from './security.queries';
 export * from './analytics.queries';
+export * from './group.queries'; // Add Group queries
 
 // Import specific queries for handlers
 import { 
@@ -75,6 +76,9 @@ import {
   GetRoleStatisticsQuery,
   GetPermissionStatisticsQuery
 } from './analytics.queries';
+
+// Import Group queries
+import { GroupQueryHandlers } from './group.queries';
 
 // User Query Handlers
 @QueryHandler(GetUserByIdQuery)
@@ -654,4 +658,7 @@ export const QueryHandlers = [
   GetUserStatisticsQueryHandler,
   GetRoleStatisticsQueryHandler,
   GetPermissionStatisticsQueryHandler,
+
+  // Group Query Handlers
+  ...GroupQueryHandlers, // Include all Group query handlers
 ];
