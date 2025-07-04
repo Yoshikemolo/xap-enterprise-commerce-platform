@@ -1,0 +1,54 @@
+{
+  "name": "customer-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "root": "apps/customer-app",
+  "sourceRoot": "apps/customer-app/src",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/customer-app",
+        "index": "apps/customer-app/src/index.html",
+        "main": "apps/customer-app/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/customer-app/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/customer-app/src/favicon.ico",
+          "apps/customer-app/src/assets"
+        ],
+        "styles": [
+          "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+          "node_modules/primeng/resources/primeng.min.css",
+          "node_modules/primeicons/primeicons.css",
+          "apps/customer-app/src/styles.scss"
+        ],
+        "scripts": []
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "port": 4201
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/customer-app/**/*.ts", "apps/customer-app/**/*.html"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/customer-app"],
+      "options": {
+        "jestConfig": "apps/customer-app/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": ["scope:customer", "type:app"]
+}
