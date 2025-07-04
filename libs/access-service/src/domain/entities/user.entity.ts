@@ -48,6 +48,7 @@ export interface UserPreferences {
 }
 
 export class User extends AggregateRootImpl {
+  private _uuid: string;
   private readonly _email: Email;
   private _firstName: string;
   private _lastName: string;
@@ -63,7 +64,12 @@ export class User extends AggregateRootImpl {
   private _groups: Group[] = [];
 
   constructor(props: UserProps) {
-    super(props.id, props.uuid);
+    super();
+    this.id = props.id || IdGenerator.generate();
+    this._uuid = props.uuid || IdGenerator.generate();
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+    this.version = 1;
     
     this._email = new Email(props.email);
     this._firstName = this.validateAndSetFirstName(props.firstName);
@@ -89,17 +95,21 @@ export class User extends AggregateRootImpl {
       isEmailVerified: false,
     });
 
-    user.addEvent(new UserCreatedEvent(user.id, {
-      email: user.email.value,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      roles: user.roles.map(role => role.name),
-    }));
+    user.addEvent(new UserCreatedEvent(
+      user.id,
+      user.email.value,
+      user.firstName,
+      user.lastName
+    ));
 
     return user;
   }
 
   // Getters
+  get uuid(): string {
+    return this._uuid;
+  }
+
   get email(): Email {
     return this._email;
   }
@@ -195,7 +205,7 @@ export class User extends AggregateRootImpl {
       this.addEvent(new UserUpdatedEvent(this.id, {
         firstName: this._firstName,
         lastName: this._lastName,
-        updatedFields,
+        updatedFields
       }));
     }
   }
@@ -263,12 +273,11 @@ export class User extends AggregateRootImpl {
     this._lockedUntil = undefined;
     this.updateTimestamp();
 
-    this.addEvent(new UserLoggedInEvent(this.id, {
-      email: this.email.value,
-      ipAddress,
-      userAgent,
-      timestamp: this._lastLoginAt,
-    }));
+    this.addEvent(new UserLoggedInEvent(
+      this.id,
+      this._lastLoginAt!,
+      ipAddress
+    ));
   }
 
   recordFailedLogin(): void {
@@ -283,11 +292,10 @@ export class User extends AggregateRootImpl {
   }
 
   recordLogout(sessionDuration: number): void {
-    this.addEvent(new UserLoggedOutEvent(this.id, {
-      email: this.email.value,
-      sessionDuration,
-      timestamp: new Date(),
-    }));
+    this.addEvent(new UserLoggedOutEvent(
+      this.id,
+      new Date()
+    ));
   }
 
   assignRole(role: Role): void {
@@ -399,11 +407,7 @@ export class User extends AggregateRootImpl {
     this._isActive = false;
     this.updateTimestamp();
 
-    this.addEvent(new UserDeletedEvent(this.id, {
-      email: this.email.value,
-      deletedBy,
-      reason,
-    }));
+    this.addEvent(new UserDeletedEvent(this.id));
   }
 
   // Private helper methods
@@ -477,13 +481,19 @@ export interface RoleProps {
 }
 
 export class Role extends AggregateRootImpl {
+  private _uuid: string;
   private _name: string;
   private _description: string;
   private _isActive: boolean;
   private _permissions: Permission[] = [];
 
   constructor(props: RoleProps) {
-    super(props.id, props.uuid);
+    super();
+    this.id = props.id || IdGenerator.generate();
+    this._uuid = props.uuid || IdGenerator.generate();
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+    this.version = 1;
     
     this._name = this.validateAndSetName(props.name);
     this._description = this.validateAndSetDescription(props.description);
@@ -502,6 +512,10 @@ export class Role extends AggregateRootImpl {
   }
 
   // Getters
+  get uuid(): string {
+    return this._uuid;
+  }
+
   get name(): string {
     return this._name;
   }
@@ -618,13 +632,19 @@ export interface PermissionProps {
 }
 
 export class Permission extends AggregateRootImpl {
+  private _uuid: string;
   private _name: string;
   private _resource: string;
   private _action: string;
   private _conditions?: Record<string, any>;
 
   constructor(props: PermissionProps) {
-    super(props.id, props.uuid);
+    super();
+    this.id = props.id || IdGenerator.generate();
+    this._uuid = props.uuid || IdGenerator.generate();
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+    this.version = 1;
     
     this._name = this.validateAndSetName(props.name);
     this._resource = this.validateAndSetResource(props.resource);
@@ -643,6 +663,10 @@ export class Permission extends AggregateRootImpl {
   }
 
   // Getters
+  get uuid(): string {
+    return this._uuid;
+  }
+
   get name(): string {
     return this._name;
   }

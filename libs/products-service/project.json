@@ -32,7 +32,8 @@
       "executor": "@nx/js:node",
       "options": {
         "buildTarget": "products-service:build",
-        "port": 3002
+        "port": 3002,
+        "inspect": false
       },
       "configurations": {
         "production": {

@@ -683,9 +683,10 @@ export class ProductApplicationService {
       media: product.media || [],
       metadata: product.metadata || {},
       createdAt: product.createdAt,
-      updatedAt: product.updatedAt,
-      createdBy: product.createdBy,
-      updatedBy: product.updatedBy
+      updatedAt: product.updatedAt
+      // Note: createdBy and updatedBy properties don't exist in Product entity
+      // createdBy: product.createdBy,
+      // updatedBy: product.updatedBy
     } as ProductResponseDto;
   }
 }

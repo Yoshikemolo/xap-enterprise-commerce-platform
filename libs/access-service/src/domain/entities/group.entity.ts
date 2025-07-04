@@ -10,6 +10,7 @@ import {
   GroupPermissionAddedEvent,
   GroupPermissionRemovedEvent
 } from '@enterprise/shared';
+import { User, Permission } from './user.entity';
 
 export interface GroupProps {
   id?: string;
@@ -25,6 +26,7 @@ export interface GroupProps {
 }
 
 export class Group extends AggregateRootImpl {
+  private _uuid: string;
   private _name: string;
   private _description: string;
   private _isActive: boolean;
@@ -35,7 +37,12 @@ export class Group extends AggregateRootImpl {
   private _permissions: Permission[] = [];
 
   constructor(props: GroupProps) {
-    super(props.id, props.uuid);
+    super();
+    this.id = props.id || IdGenerator.generate();
+    this._uuid = props.uuid || IdGenerator.generate();
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+    this.version = 1;
     
     this._name = this.validateAndSetName(props.name);
     this._description = this.validateAndSetDescription(props.description);
@@ -54,12 +61,11 @@ export class Group extends AggregateRootImpl {
       uuid: IdGenerator.generate(),
     });
 
-    group.addEvent(new GroupCreatedEvent(group.id, {
-      name: group.name,
-      description: group.description,
-      parentId: group.parentId,
-      isActive: group.isActive,
-    }));
+    group.addEvent(new GroupCreatedEvent(
+      group.id,
+      group.name,
+      group.description
+    ));
 
     return group;
   }
@@ -73,6 +79,10 @@ export class Group extends AggregateRootImpl {
   }
 
   // Getters
+  get uuid(): string {
+    return this._uuid;
+  }
+
   get name(): string {
     return this._name;
   }
@@ -97,32 +107,32 @@ export class Group extends AggregateRootImpl {
     return [...this._children];
   }
 
-  get users(): User[] {
-    return [...this._users];
-  }
-
-  get permissions(): Permission[] {
-    return [...this._permissions];
-  }
-
-  get isRootGroup(): boolean {
-    return !this._parentId;
-  }
-
-  get hasChildren(): boolean {
-    return this._children.length > 0;
+  get isDefaultGroup(): boolean {
+    return this._name === 'DefaultGroup';
   }
 
   get hasUsers(): boolean {
     return this._users.length > 0;
   }
 
+  get hasChildren(): boolean {
+    return this._children.length > 0;
+  }
+
   get hasPermissions(): boolean {
     return this._permissions.length > 0;
   }
 
-  get isDefaultGroup(): boolean {
-    return this._name === 'DefaultGroup';
+  get isRootGroup(): boolean {
+    return !this._parentId;
+  }
+
+  get users(): User[] {
+    return [...this._users];
+  }
+
+  get permissions(): Permission[] {
+    return [...this._permissions];
   }
 
   // Business Methods
@@ -141,11 +151,7 @@ export class Group extends AggregateRootImpl {
 
     if (updatedFields.length > 0) {
       this.updateTimestamp();
-      this.addEvent(new GroupUpdatedEvent(this.id, {
-        name: this._name,
-        description: this._description,
-        updatedFields,
-      }));
+      this.addEvent(new GroupUpdatedEvent(this.id, { updatedFields }));
     }
   }
 
@@ -157,10 +163,7 @@ export class Group extends AggregateRootImpl {
     this._isActive = true;
     this.updateTimestamp();
 
-    this.addEvent(new GroupUpdatedEvent(this.id, {
-      isActive: true,
-      updatedFields: ['isActive'],
-    }));
+    this.addEvent(new GroupUpdatedEvent(this.id, { isActive: true }));
   }
 
   deactivate(): void {
@@ -175,10 +178,7 @@ export class Group extends AggregateRootImpl {
     this._isActive = false;
     this.updateTimestamp();
 
-    this.addEvent(new GroupUpdatedEvent(this.id, {
-      isActive: false,
-      updatedFields: ['isActive'],
-    }));
+    this.addEvent(new GroupUpdatedEvent(this.id, { isActive: false }));
   }
 
   setParent(parent: Group): void {
@@ -195,11 +195,7 @@ export class Group extends AggregateRootImpl {
     this._parent = parent;
     this.updateTimestamp();
 
-    this.addEvent(new GroupUpdatedEvent(this.id, {
-      parentId: this._parentId,
-      oldParentId,
-      updatedFields: ['parent'],
-    }));
+    this.addEvent(new GroupUpdatedEvent(this.id, { parentId: this._parentId }));
   }
 
   removeParent(): void {
@@ -216,11 +212,7 @@ export class Group extends AggregateRootImpl {
     this._parent = undefined;
     this.updateTimestamp();
 
-    this.addEvent(new GroupUpdatedEvent(this.id, {
-      parentId: undefined,
-      oldParentId,
-      updatedFields: ['parent'],
-    }));
+    this.addEvent(new GroupUpdatedEvent(this.id, { parentId: undefined }));
   }
 
   addChildGroup(child: Group): void {
@@ -237,10 +229,7 @@ export class Group extends AggregateRootImpl {
     child._parent = this;
     this.updateTimestamp();
 
-    this.addEvent(new GroupUpdatedEvent(this.id, {
-      childAdded: child.id,
-      updatedFields: ['children'],
-    }));
+    this.addEvent(new GroupUpdatedEvent(this.id, { childAdded: child.id }));
   }
 
   removeChildGroup(childId: string): void {
@@ -254,10 +243,7 @@ export class Group extends AggregateRootImpl {
       child._parent = undefined;
       this.updateTimestamp();
 
-      this.addEvent(new GroupUpdatedEvent(this.id, {
-        childRemoved: childId,
-        updatedFields: ['children'],
-      }));
+      this.addEvent(new GroupUpdatedEvent(this.id, { childRemoved: childId }));
     }
   }
 
@@ -269,11 +255,7 @@ export class Group extends AggregateRootImpl {
     this._users.push(user);
     this.updateTimestamp();
 
-    this.addEvent(new GroupUserAddedEvent(this.id, {
-      userId: user.id,
-      userEmail: user.email.value,
-      groupName: this._name,
-    }));
+    this.addEvent(new GroupUserAddedEvent(this.id, user.id));
   }
 
   removeUser(userId: string): void {
@@ -285,11 +267,7 @@ export class Group extends AggregateRootImpl {
     if (this._users.length !== initialLength && user) {
       this.updateTimestamp();
 
-      this.addEvent(new GroupUserRemovedEvent(this.id, {
-        userId: userId,
-        userEmail: user.email.value,
-        groupName: this._name,
-      }));
+      this.addEvent(new GroupUserRemovedEvent(this.id, userId));
     }
   }
 
@@ -301,11 +279,7 @@ export class Group extends AggregateRootImpl {
     this._permissions.push(permission);
     this.updateTimestamp();
 
-    this.addEvent(new GroupPermissionAddedEvent(this.id, {
-      permissionId: permission.id,
-      permissionName: permission.name,
-      groupName: this._name,
-    }));
+    this.addEvent(new GroupPermissionAddedEvent(this.id, permission.id));
   }
 
   removePermission(permissionName: string): void {
@@ -317,11 +291,7 @@ export class Group extends AggregateRootImpl {
     if (this._permissions.length !== initialLength && permission) {
       this.updateTimestamp();
 
-      this.addEvent(new GroupPermissionRemovedEvent(this.id, {
-        permissionId: permission.id,
-        permissionName: permissionName,
-        groupName: this._name,
-      }));
+      this.addEvent(new GroupPermissionRemovedEvent(this.id, permission.id));
     }
   }
 
@@ -411,11 +381,7 @@ export class Group extends AggregateRootImpl {
     this._isActive = false;
     this.updateTimestamp();
 
-    this.addEvent(new GroupDeletedEvent(this.id, {
-      name: this._name,
-      deletedBy,
-      reason,
-    }));
+    this.addEvent(new GroupDeletedEvent(this.id));
   }
 
   // Private helper methods

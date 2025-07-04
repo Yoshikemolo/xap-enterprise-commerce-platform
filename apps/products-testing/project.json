@@ -19,7 +19,8 @@
       "executor": "@nx/js:node",
       "options": {
         "buildTarget": "products-testing:build",
-        "port": 3333
+        "port": 3333,
+        "inspect": false
       }
     },
     "lint": {

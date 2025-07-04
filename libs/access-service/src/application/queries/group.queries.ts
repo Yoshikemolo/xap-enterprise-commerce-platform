@@ -9,7 +9,7 @@ import {
   UserDto,
   PermissionDto
 } from '../../domain/repositories';
-import { QueryFilter, QueryOptions, PaginatedResponse } from '@enterprise/shared';
+import { QueryFilter, QueryOptions, PaginatedResult } from '@enterprise/shared';
 import { NotFoundError } from '@enterprise/shared';
 
 // Group Queries
@@ -162,12 +162,13 @@ export class GetGroupByNameQueryHandler implements IQueryHandler<GetGroupByNameQ
 
 @QueryHandler(GetGroupsQuery)
 @Injectable()
-export class GetGroupsQueryHandler implements IQueryHandler<GetGroupsQuery, PaginatedResponse<GroupDto>> {
+export class GetGroupsQueryHandler implements IQueryHandler<GetGroupsQuery, PaginatedResult<GroupDto>> {
   constructor(private readonly groupReadModel: GroupReadModel) {}
 
-  async execute(query: GetGroupsQuery): Promise<PaginatedResponse<GroupDto>> {
-    const groups = await this.groupReadModel.findMany(query.filter || {});
-    const total = await this.groupReadModel.count(query.filter || {});
+  async execute(query: GetGroupsQuery): Promise<PaginatedResult<GroupDto>> {
+    const filters = query.filter ? [query.filter] : [];
+    const groups = await this.groupReadModel.findMany(filters);
+    const total = await this.groupReadModel.count(filters);
 
     // Apply pagination if specified
     let paginatedGroups = groups;
@@ -176,17 +177,18 @@ export class GetGroupsQueryHandler implements IQueryHandler<GetGroupsQuery, Pagi
       paginatedGroups = groups.slice(skip, skip + query.options.take);
     }
 
+    const limit = query.options?.take || 10;
+    const skip = query.options?.skip || 0;
+    const page = Math.floor(skip / limit) + 1;
+    const totalPages = Math.ceil(total / limit);
+    
     return {
-      success: true,
       data: paginatedGroups,
-      pagination: {
-        page: Math.floor((query.options?.skip || 0) / (query.options?.take || 10)) + 1,
-        limit: query.options?.take || 10,
-        total,
-        pages: Math.ceil(total / (query.options?.take || 10)),
-        hasNext: (query.options?.skip || 0) + (query.options?.take || 10) < total,
-        hasPrev: (query.options?.skip || 0) > 0,
-      }
+      total,
+      page,
+      limit,
+      totalPages,
+      hasMore: skip + limit < total,
     };
   }
 }

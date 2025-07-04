@@ -2,8 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccessServiceEntities } from './entities';
 import { AccessServiceRepositories } from './repositories';
-import { UserRepository, RoleRepository, PermissionRepository } from '../../domain/repositories';
 import { TypeOrmUserRepository, TypeOrmRoleRepository, TypeOrmPermissionRepository } from './repositories';
+
+// Create tokens for dependency injection
+export const USER_REPOSITORY = Symbol('UserRepository');
+export const ROLE_REPOSITORY = Symbol('RoleRepository');
+export const PERMISSION_REPOSITORY = Symbol('PermissionRepository');
+export const GROUP_REPOSITORY = Symbol('GroupRepository');
 
 @Module({
   imports: [
@@ -15,23 +20,23 @@ import { TypeOrmUserRepository, TypeOrmRoleRepository, TypeOrmPermissionReposito
     
     // Domain repository interfaces binding
     {
-      provide: UserRepository,
+      provide: USER_REPOSITORY,
       useClass: TypeOrmUserRepository,
     },
     {
-      provide: RoleRepository,
+      provide: ROLE_REPOSITORY,
       useClass: TypeOrmRoleRepository,
     },
     {
-      provide: PermissionRepository,
+      provide: PERMISSION_REPOSITORY,
       useClass: TypeOrmPermissionRepository,
     },
   ],
   exports: [
-    // Export the domain interfaces, not the implementations
-    UserRepository,
-    RoleRepository,
-    PermissionRepository,
+    // Export the tokens
+    USER_REPOSITORY,
+    ROLE_REPOSITORY,
+    PERMISSION_REPOSITORY,
     
     // Also export TypeORM for migrations
     TypeOrmModule,

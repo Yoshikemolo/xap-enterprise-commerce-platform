@@ -121,7 +121,7 @@ export class CreateGroupTables1640995200000 implements MigrationInterface {
     // Create indexes
     await queryRunner.createIndex(
       'groups',
-      new Index('IDX_GROUPS_NAME', ['name'], { isUnique: true })
+      new Index('IDX_GROUPS_NAME', ['name'], { unique: true })
     );
 
     await queryRunner.createIndex(
@@ -131,7 +131,7 @@ export class CreateGroupTables1640995200000 implements MigrationInterface {
 
     await queryRunner.createIndex(
       'groups',
-      new Index('IDX_GROUPS_UUID', ['uuid'], { isUnique: true })
+      new Index('IDX_GROUPS_UUID', ['uuid'], { unique: true })
     );
 
     await queryRunner.createIndex(
@@ -161,7 +161,7 @@ export class CreateGroupTables1640995200000 implements MigrationInterface {
 
     await queryRunner.createIndex(
       'user_groups',
-      new Index('IDX_USER_GROUPS_UNIQUE', ['user_id', 'group_id'], { isUnique: true })
+      new Index('IDX_USER_GROUPS_UNIQUE', ['user_id', 'group_id'], { unique: true })
     );
 
     await queryRunner.createIndex(
@@ -176,7 +176,7 @@ export class CreateGroupTables1640995200000 implements MigrationInterface {
 
     await queryRunner.createIndex(
       'group_permissions',
-      new Index('IDX_GROUP_PERMISSIONS_UNIQUE', ['group_id', 'permission_id'], { isUnique: true })
+      new Index('IDX_GROUP_PERMISSIONS_UNIQUE', ['group_id', 'permission_id'], { unique: true })
     );
 
     // Create foreign keys

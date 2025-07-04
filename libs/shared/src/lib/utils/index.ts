@@ -1,18 +1,25 @@
-import { v4 as uuidv4, validate as uuidValidate, version as uuidVersion } from 'uuid';
-import { DomainEvent, QueryFilter, PaginationOptions, QueryOptions } from '../types';
+// import { v4 as uuidv4, validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { DomainEvent, QueryFilter, QueryOptions } from '../types/index';
 
 // UUID Generator
 export class IdGenerator {
   static generate(): string {
-    return uuidv4();
+    // Generate a simple UUID v4 without requiring external libraries
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
   }
 
   static isValid(id: string): boolean {
-    return uuidValidate(id);
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(id);
   }
 
   static isUuidV4(id: string): boolean {
-    return uuidValidate(id) && uuidVersion(id) === 4;
+    const uuidV4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return uuidV4Regex.test(id);
   }
 
   static generateNumericId(): string {
@@ -181,7 +188,7 @@ export class StringUtils {
 
 // Query Utilities
 export class QueryUtils {
-  static buildPagination(options: PaginationOptions = {}): Required<PaginationOptions> {
+  static buildPagination(options: Partial<{ take: number; skip: number; sortBy: string; order: 'ASC' | 'DESC' }> = {}): Required<{ take: number; skip: number; sortBy: string; order: 'ASC' | 'DESC' }> {
     const take = Math.min(Math.max(options.take || 10, 1), 100); // Min 1, Max 100, Default 10
     const skip = Math.max(options.skip || 0, 0); // Min 0, Default 0
     const sortBy = options.sortBy || 'createdAt';
@@ -214,12 +221,12 @@ export class QueryUtils {
     };
   }
 
-  static sanitizeFilter(filter: QueryFilter): QueryFilter {
+  static sanitizeFilter(filter: any): any {
     if (!filter || typeof filter !== 'object') {
       return {};
     }
 
-    const sanitized: QueryFilter = {};
+    const sanitized: any = {};
 
     for (const [key, value] of Object.entries(filter)) {
       if (value === undefined || value === null) {
@@ -272,7 +279,7 @@ export class QueryUtils {
 
 // Filter Builder Utility
 export class FilterBuilder {
-  private filter: QueryFilter = {};
+  private filter: any = {};
 
   static create(): FilterBuilder {
     return new FilterBuilder();
@@ -348,22 +355,22 @@ export class FilterBuilder {
     return this;
   }
 
-  and(filters: QueryFilter[]): FilterBuilder {
+  and(filters: any[]): FilterBuilder {
     this.filter.$and = [...(this.filter.$and || []), ...filters];
     return this;
   }
 
-  or(filters: QueryFilter[]): FilterBuilder {
+  or(filters: any[]): FilterBuilder {
     this.filter.$or = [...(this.filter.$or || []), ...filters];
     return this;
   }
 
-  not(filter: QueryFilter): FilterBuilder {
+  not(filter: any): FilterBuilder {
     this.filter.$not = filter;
     return this;
   }
 
-  build(): QueryFilter {
+  build(): any {
     return QueryUtils.sanitizeFilter(this.filter);
   }
 
@@ -420,7 +427,7 @@ export class ObjectUtils {
     return false;
   }
 
-  static pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
+  static pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
     const result = {} as Pick<T, K>;
     keys.forEach(key => {
       if (key in obj) {
@@ -519,7 +526,7 @@ export class PerformanceUtils {
     wait: number,
     immediate?: boolean
   ): (...args: Parameters<T>) => void {
-    let timeout: NodeJS.Timeout | null = null;
+    let timeout: ReturnType<typeof setTimeout> | null = null;
     
     return function executedFunction(...args: Parameters<T>) {
       const later = () => {

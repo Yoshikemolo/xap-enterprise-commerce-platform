@@ -2,7 +2,7 @@ import { SetMetadata, applyDecorators } from '@nestjs/common';
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
 import { IsOptional, IsUUID, IsDateString, IsString, IsBoolean, IsNumber, IsEmail, IsUrl, MaxLength, MinLength, Min, Max } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-import { PERMISSIONS } from '../constants';
+import { PERMISSIONS } from '../constants/index';
 
 // Permission Decorator
 export const PERMISSION_KEY = 'permissions';

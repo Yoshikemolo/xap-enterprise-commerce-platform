@@ -1,3 +1,9 @@
+// Import services
+import { UserApplicationService } from './user.application.service';
+import { RoleApplicationService } from './role.application.service';
+import { PermissionApplicationService } from './permission.application.service';
+import { GroupApplicationService } from './group.application.service';
+
 // Export all application services
 export { UserApplicationService } from './user.application.service';
 export { RoleApplicationService } from './role.application.service';

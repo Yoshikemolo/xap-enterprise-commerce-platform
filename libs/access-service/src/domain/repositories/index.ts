@@ -1,5 +1,6 @@
 import { Repository, QueryFilter, QueryOptions, ReadModel } from '@enterprise/shared';
 import { User, Role, Permission } from '../entities/user.entity';
+import { Group } from '../entities/group.entity';
 
 // User Repository Interface
 export interface UserRepository extends Repository<User> {
@@ -8,6 +9,7 @@ export interface UserRepository extends Repository<User> {
   findActiveUsers(options?: QueryOptions): Promise<User[]>;
   findUsersWithRole(roleName: string, options?: QueryOptions): Promise<User[]>;
   findUsersWithPermission(permissionName: string, options?: QueryOptions): Promise<User[]>;
+  findAll(options?: QueryOptions): Promise<User[]>;
   countActiveUsers(): Promise<number>;
   existsByEmail(email: string): Promise<boolean>;
 }
@@ -18,6 +20,7 @@ export interface RoleRepository extends Repository<Role> {
   findByNameWithPermissions(name: string): Promise<Role | null>;
   findActiveRoles(options?: QueryOptions): Promise<Role[]>;
   findRolesWithPermission(permissionName: string, options?: QueryOptions): Promise<Role[]>;
+  findAll(options?: QueryOptions): Promise<Role[]>;
   countActiveRoles(): Promise<number>;
   existsByName(name: string): Promise<boolean>;
 }
@@ -29,6 +32,7 @@ export interface PermissionRepository extends Repository<Permission> {
   findByResourceAndAction(resource: string, action: string): Promise<Permission | null>;
   findPermissionsForUser(userId: string): Promise<Permission[]>;
   findPermissionsForRole(roleId: string): Promise<Permission[]>;
+  findAll(options?: QueryOptions): Promise<Permission[]>;
   existsByName(name: string): Promise<boolean>;
   existsByResourceAndAction(resource: string, action: string): Promise<boolean>;
 }
@@ -580,4 +584,3 @@ export interface UpdateGroupData {
 
 // Export all interfaces
 export * from '../entities/user.entity';
-export * from './group.repository';

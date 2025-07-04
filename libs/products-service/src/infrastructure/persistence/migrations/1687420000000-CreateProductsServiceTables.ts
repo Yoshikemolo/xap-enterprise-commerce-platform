@@ -486,19 +486,19 @@ export class CreateProductsServiceTables1687420000000 implements MigrationInterf
     );
 
     // Create indices for families
-    await queryRunner.createIndex('families', new Index('IDX_FAMILIES_CODE', ['code'], { isUnique: true }));
+    await queryRunner.createIndex('families', new Index('IDX_FAMILIES_CODE', ['code'], { unique: true }));
     await queryRunner.createIndex('families', new Index('IDX_FAMILIES_PARENT_ID', ['parent_family_id']));
     await queryRunner.createIndex('families', new Index('IDX_FAMILIES_ACTIVE', ['is_active']));
     await queryRunner.createIndex('families', new Index('IDX_FAMILIES_SORT', ['sort_order']));
 
     // Create indices for products
-    await queryRunner.createIndex('products', new Index('IDX_PRODUCTS_CODE', ['product_code'], { isUnique: true }));
+    await queryRunner.createIndex('products', new Index('IDX_PRODUCTS_CODE', ['product_code'], { unique: true }));
     await queryRunner.createIndex('products', new Index('IDX_PRODUCTS_FAMILY_ID', ['family_id']));
     await queryRunner.createIndex('products', new Index('IDX_PRODUCTS_ACTIVE', ['is_active']));
     await queryRunner.createIndex('products', new Index('IDX_PRODUCTS_CREATED_AT', ['created_at']));
 
     // Create indices for stocks
-    await queryRunner.createIndex('stocks', new Index('IDX_STOCKS_PRODUCT_LOCATION', ['product_id', 'location_id'], { isUnique: true }));
+    await queryRunner.createIndex('stocks', new Index('IDX_STOCKS_PRODUCT_LOCATION', ['product_id', 'location_id'], { unique: true }));
     await queryRunner.createIndex('stocks', new Index('IDX_STOCKS_PRODUCT_CODE', ['product_code']));
     await queryRunner.createIndex('stocks', new Index('IDX_STOCKS_LOCATION', ['location_id']));
     await queryRunner.createIndex('stocks', new Index('IDX_STOCKS_ACTIVE', ['is_active']));

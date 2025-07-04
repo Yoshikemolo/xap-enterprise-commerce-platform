@@ -14,7 +14,7 @@ import {
   CreatePermissionData,
   UpdatePermissionData
 } from '../../domain/repositories';
-import { User, Role, Permission } from '../../domain/entities/user.entity';
+import { User, Role, Permission, UserPreferences } from '../../domain/entities/user.entity';
 import { NotFoundError, ConflictError, ValidationError } from '@enterprise/shared';
 
 // User Commands
@@ -256,10 +256,25 @@ export class UpdateUserCommandHandler implements ICommandHandler<UpdateUserComma
 
     // Update basic profile
     if (command.userData.firstName || command.userData.lastName || command.userData.preferences) {
+      // Merge partial preferences with existing preferences if provided
+      let updatedPreferences: UserPreferences | undefined = undefined;
+      if (command.userData.preferences) {
+        updatedPreferences = {
+          language: command.userData.preferences.language || user.preferences.language,
+          timezone: command.userData.preferences.timezone || user.preferences.timezone,
+          theme: command.userData.preferences.theme || user.preferences.theme,
+          notifications: {
+            email: command.userData.preferences.notifications?.email ?? user.preferences.notifications.email,
+            sms: command.userData.preferences.notifications?.sms ?? user.preferences.notifications.sms,
+            push: command.userData.preferences.notifications?.push ?? user.preferences.notifications.push,
+          },
+        };
+      }
+      
       user.updateProfile(
         command.userData.firstName || user.firstName,
         command.userData.lastName || user.lastName,
-        command.userData.preferences
+        updatedPreferences
       );
     }
 

@@ -1,5 +1,5 @@
-import { DomainEvent } from '../types';
-import { IdGenerator, DateUtils } from '../utils';
+import { DomainEvent } from '../types/index';
+import { IdGenerator, DateUtils } from '../utils/index';
 
 // Base Domain Event Implementation
 export abstract class BaseDomainEvent implements DomainEvent {

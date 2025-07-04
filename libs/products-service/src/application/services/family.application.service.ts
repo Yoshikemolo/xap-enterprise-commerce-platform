@@ -567,8 +567,10 @@ export class FamilyApplicationService {
       sortOrder: family.sortOrder,
       createdAt: family.createdAt,
       updatedAt: family.updatedAt,
-      createdBy: family.createdBy,
-      updatedBy: family.updatedBy
+      // Note: createdBy and updatedBy are not available in the domain entity
+      // These would need to be added to the domain model if required
+      // createdBy: family.createdBy,
+      // updatedBy: family.updatedBy
     } as FamilyResponseDto;
   }
 }

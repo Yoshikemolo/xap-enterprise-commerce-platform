@@ -66,6 +66,15 @@ export class CreateUserDto {
 
   @OptionalEnumField(['light', 'dark'], { description: 'UI theme preference' })
   theme?: 'light' | 'dark' = 'light';
+
+  @OptionalBooleanField({ description: 'Email notifications enabled' })
+  emailNotifications?: boolean = true;
+
+  @OptionalBooleanField({ description: 'SMS notifications enabled' })
+  smsNotifications?: boolean = false;
+
+  @OptionalBooleanField({ description: 'Push notifications enabled' })
+  pushNotifications?: boolean = true;
 }
 
 @UpdateEntityDto()
@@ -561,4 +570,63 @@ export class HealthCheckResponseDto {
     errorRate: number;
     throughput: number;
   };
+}
+
+// Missing DTOs that are referenced in domain repositories
+export class UserProfileDto {
+  id: string;
+  uuid: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  isActive: boolean;
+  isEmailVerified: boolean;
+  lastLoginAt?: Date;
+  preferences: {
+    language: string;
+    timezone: string;
+    theme: string;
+    notifications: {
+      email: boolean;
+      sms: boolean;
+      push: boolean;
+    };
+  };
+  roles: RoleResponseDto[];
+  permissions: PermissionResponseDto[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export class UserLockStatusDto {
+  id: string;
+  uuid: string;
+  email: string;
+  fullName: string;
+  isLocked: boolean;
+  lockedUntil?: Date;
+  loginAttempts: number;
+  lastFailedAttempt?: Date;
+}
+
+export class RoleHierarchyDto {
+  id: string;
+  uuid: string;
+  name: string;
+  description: string;
+  isActive: boolean;
+  permissions: PermissionResponseDto[];
+  childRoles: RoleHierarchyDto[];
+  userCount: number;
+}
+
+export class ResourcePermissionDto {
+  resource: string;
+  permissions: {
+    action: string;
+    permissionId: string;
+    permissionName: string;
+    conditions?: Record<string, any>;
+  }[];
 }
