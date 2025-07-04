@@ -28,6 +28,7 @@ This project implements a complete commerce platform with product portfolio mana
 - **[🚀 XAP Enterprise Commerce Platform](./docs/en/xap-marketing.md)** - **Marketing overview for SMBs and enterprises**
 - [**MVP Summary**](./docs/MVP-SUMMARY.md) - **NEW**: Complete MVP functional overview and achievements
 - [**Project Status**](./docs/en/project-status.md) - **Current implementation status** and development roadmap
+- [**Commerce Service Specification**](./docs/en/commerce-service-specification.md) - **NEW**: Technical specification for Commerce Service development
 - [**Products Service Implementation**](./libs/products-service/PRODUCTS-SERVICE-IMPLEMENTATION.md) - Complete Products Service CQRS documentation
 - [**Access Service CQRS**](./libs/access-service/CQRS-IMPLEMENTATION.md) - Complete Access Service CQRS documentation
 - [**Functional Objectives**](./docs/en/functional-objectives.md) - Detailed system requirements and business goals
@@ -64,7 +65,7 @@ The system is organized in 4 distinct layers:
   - ✅ REST API Controllers with Swagger
   - ✅ Database migrations complete
   - ✅ FIFO/FEFO logic for inventory rotation
-- **Commerce Service** - Orders, pricing, promotions, and distribution (📋 **PLANNED**)
+- **Commerce Service** - Orders, pricing, promotions, and distribution (📋 **PLANNED** - [Technical Specification](./docs/en/commerce-service-specification.md))
 - **Scheduling Service** - Calendar events and notifications (📋 **PLANNED**)
 - **Business Logic Service** - Analytics, reporting, and business intelligence (📋 **PLANNED**)
 
@@ -244,6 +245,7 @@ Este proyecto implementa una plataforma de comercio completa con gestión de por
 - **[🚀 XAP Enterprise Commerce Platform](./docs/es/xap-marketing.md)** - **Visión comercial para PyMEs y empresas**
 - [**Resumen del MVP**](./docs/MVP-SUMMARY.md) - **NUEVO**: Descripción funcional completa del MVP y logros
 - [**Estado del Proyecto**](./docs/es/project-status.md) - **Estado actual de implementación** y hoja de ruta de desarrollo
+- [**Especificación Commerce Service**](./docs/es/commerce-service-specification.md) - **NUEVO**: Especificación técnica para desarrollo del Commerce Service
 - [**Implementación Products Service**](./libs/products-service/PRODUCTS-SERVICE-IMPLEMENTATION.md) - Documentación completa CQRS del Products Service
 - [**CQRS Access Service**](./libs/access-service/CQRS-IMPLEMENTATION.md) - Documentación completa CQRS del Access Service
 - [**Objetivos Funcionales**](./docs/es/functional-objectives.md) - Requisitos detallados del sistema y objetivos de negocio
@@ -280,7 +282,7 @@ El sistema está organizado en 4 capas distintas:
   - ✅ Controladores REST API con Swagger
   - ✅ Migraciones de base de datos completas
   - ✅ Lógica FIFO/FEFO para rotación de inventario
-- **Commerce Service** - Órdenes, precios, promociones y distribución (📋 **PLANIFICADO**)
+- **Commerce Service** - Órdenes, precios, promociones y distribución (📋 **PLANIFICADO** - [Especificación Técnica](./docs/es/commerce-service-specification.md))
 - **Scheduling Service** - Eventos de calendario y notificaciones (📋 **PLANIFICADO**)
 - **Business Logic Service** - Analytics, reportes e inteligencia de negocio (📋 **PLANIFICADO**)
 
