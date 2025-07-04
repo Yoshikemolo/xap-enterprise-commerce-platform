@@ -1,0 +1,39 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~primeng/resources/themes/lara-light-blue/theme.css';
+@import '~primeng/resources/primeng.min.css';
+@import '~primeicons/primeicons.css';
+
+/* Global styles */
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* XAP Customer Brand Colors */
+:root {
+  --xap-primary: #2196F3;
+  --xap-secondary: #FF4081;
+  --xap-success: #4CAF50;
+  --xap-warning: #FF9800;
+  --xap-danger: #F44336;
+  --xap-dark: #212529;
+  --xap-light: #F8F9FA;
+  --xap-accent: #9C27B0;
+}
+
+/* Customer-specific styles */
+.customer-header {
+  background: linear-gradient(135deg, var(--xap-primary), var(--xap-accent));
+  color: white;
+}

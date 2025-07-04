@@ -1,0 +1,17 @@
+# Este archivo ha sido reemplazado por archivos project.json individuales
+# Los archivos project.json proporcionan una configuración más modular y mantenible
+# 
+# Archivos project.json creados:
+# - apps/manager-app/project.json
+# - apps/customer-app/project.json  
+# - apps/api-gateway/project.json
+# - apps/products-testing/project.json
+# - libs/access-service/project.json
+# - libs/products-service/project.json
+# - libs/commerce-service/project.json
+# - libs/scheduling-service/project.json
+# - libs/business-service/project.json
+# - libs/shared/project.json
+#
+# Para más información sobre project.json vs workspace.json:
+# https://nx.dev/reference/project-configuration

@@ -1,0 +1,54 @@
+{
+  "name": "manager-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "root": "apps/manager-app",
+  "sourceRoot": "apps/manager-app/src",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/manager-app",
+        "index": "apps/manager-app/src/index.html",
+        "main": "apps/manager-app/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/manager-app/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/manager-app/src/favicon.ico",
+          "apps/manager-app/src/assets"
+        ],
+        "styles": [
+          "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+          "node_modules/primeng/resources/primeng.min.css",
+          "node_modules/primeicons/primeicons.css",
+          "apps/manager-app/src/styles.scss"
+        ],
+        "scripts": []
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "port": 4200
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/manager-app/**/*.ts", "apps/manager-app/**/*.html"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/manager-app"],
+      "options": {
+        "jestConfig": "apps/manager-app/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": ["scope:manager", "type:app"]
+}
